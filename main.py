@@ -1,46 +1,40 @@
+# main.py
 import pygame
 from clasess.level import Level
 from clasess.player import Player
 
-# Ініціалізація Pygame
 pygame.init()
 
-WIDTH, HEIGHT = 800, 600
-SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("aribius-fire in the night")
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
 
-# FPS контролер
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
-FPS = 60
 
 # Завантаження рівня
-level = Level("./map/map.tmx", SCREEN)
+level = Level("map/map.tmx", screen)
 
 # Створення гравця
-player = Player(x=400, y=300, width=40, height=40, speed=5)
-
-# Група спрайтів (якщо необхідно)
-all_sprites = pygame.sprite.Group()
-all_sprites.add(player)
+player = Player(x=1250, y=840, width=32, height=32, speed=5, assets_path="assets", scale_factor=4)
 
 running = True
-
 while running:
-    clock.tick(FPS)
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # Оновлення
-    player.update()
-    level.camera.update(player.rect)
+    # Оновлення гравця
+    player.update(level.map_width, level.map_height)
+
+    # Оновлення рівня (камера, дерева, інші елементи)
+    level.update(player)
 
     # Малювання
-    SCREEN.fill((0, 0, 0))  # Чорний фон
-    level.render()  # Малюємо рівень
-    player.draw(SCREEN, level.camera)  # Малюємо гравця
-
+    screen.fill((0, 0, 0))  # Очистка екрану
+    level.render()  # Рендеринг рівня
+    player.draw(screen, level.camera)  # Малювання гравця
     pygame.display.flip()
+
+    clock.tick(60)
 
 pygame.quit()
