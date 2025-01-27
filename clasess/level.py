@@ -47,7 +47,7 @@ class Level:
         self.map_height = self.tmx_data.height * self.tmx_data.tileheight
 
         # Камера
-        self.camera = Camera(screen.get_width(), screen.get_height(), self.map_width, self.map_height, zoom=2)
+        self.camera = Camera(screen.get_width(), screen.get_height(), self.map_width, self.map_height, zoom=3.5)
 
         # Групи спрайтів
         self.water_group = pg.sprite.Group()  # Шар води

@@ -4,10 +4,9 @@ import os
 import pygame as pg
 
 class Player(pg.sprite.Sprite):
-    def __init__(self, x, y, speed, assets_path, scale_factor=3):
+    def __init__(self, x, y, speed, assets_path,):
         super().__init__()
         self.speed = speed
-        self.scale_factor = scale_factor
         self.assets_path = os.path.join(assets_path, "player")
 
         # Завантажуємо всі анімації без масштабування
@@ -40,8 +39,8 @@ class Player(pg.sprite.Sprite):
         # Атрибути для прогрес-бару та замерзання
         self.cold_progress = 0.0
         self.max_cold = 100.0
-        self.cold_increase_amount = 10.0  # 10% кожні 3 секунди
-        self.cold_increase_interval = 3.0  # Інтервал в секундах
+        self.cold_increase_amount = 3.5  
+        self.cold_increase_interval = 2  # Інтервал в секундах
         self.cold_timer = 0.0  # Таймер для збільшення холоду
         self.is_frozen = False
 
@@ -193,7 +192,7 @@ class Player(pg.sprite.Sprite):
         """Малювання прогрес-бару над персонажем."""
         # Визначаємо позицію бару над персонажем
         screen_center = camera.apply_point(self.rect.center)
-        bar_y = screen_center[1] - self.rect.height // 2 - 30  # Розташування над персонажем
+        bar_y = screen_center[1] - self.rect.height // 2 - 50  # Розташування над персонажем
 
         # Округлення прогресу до найближчого 10%
         rounded_progress = int((self.cold_progress / self.max_cold) * 100)
