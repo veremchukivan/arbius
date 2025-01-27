@@ -1,6 +1,5 @@
 import pygame
 
-
 class Camera:
     def __init__(self, screen_width, screen_height, map_width, map_height, zoom=1):
         self.width = screen_width
@@ -20,9 +19,22 @@ class Camera:
         self.x = max(0, min(self.x, self.map_width - (self.width / self.zoom)))
         self.y = max(0, min(self.y, self.map_height - (self.height / self.zoom)))
 
-    def apply_zoom(self, pos):
-        """Застосовує масштаб до позиції."""
-        return (pos[0] * self.zoom, pos[1] * self.zoom)
+    def apply(self, rect):
+        """Перетворює координати об'єкта з урахуванням камери без масштабування."""
+        return pygame.Rect(
+            (rect.x - self.x) * self.zoom,
+            (rect.y - self.y) * self.zoom,
+            rect.width * self.zoom,
+            rect.height * self.zoom,
+        )
+
+    def apply_point(self, point):
+        """Перетворює координати точки з урахуванням камери та масштабування."""
+        return (
+            (point[0] - self.x) * self.zoom,
+            (point[1] - self.y) * self.zoom,
+        )
+
 
     def scale_surface(self, surface):
         """Масштабує спрайт відповідно до камери."""
