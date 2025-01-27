@@ -13,9 +13,8 @@ level = Level("map/map.tmx", screen)
 player = Player(
     x=1700,
     y=2300,
-    speed=8,
+    speed=4,
     assets_path="assets",
-    scale_factor=3,
 )
 
 bar = playerbar(assets_path="assets", screen=screen)  # Ініціалізуємо HUD
