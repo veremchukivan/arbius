@@ -64,8 +64,6 @@ while running:
     # Малюємо гравця
     player.draw(screen, level.camera, bar)
 
-    # Малюємо HUD поверх всіх інших елементів
-    bar.draw()
 
     pygame.display.flip()
 
