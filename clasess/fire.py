@@ -83,7 +83,6 @@ class Fire(pg.sprite.Sprite):
                 self.progress -= 3
                 if self.progress < 0:
                     self.progress = 0
-                print(f"Fire progress decreased to {self.progress}%")
             if self.progress == 0:
                 self.is_lighting_active = False
 
@@ -119,3 +118,13 @@ class Fire(pg.sprite.Sprite):
             bar_x = scaled_rect.centerx - bar_width // 2
             bar_y = scaled_rect.top - bar_height - 10  # Відступ 10 пікселів над костром
             surface.blit(self.current_bar_image, (bar_x, bar_y))
+
+    def add_progress(self, distance):
+        """Збільшує прогрес бар на основі відстані до костра."""
+        if distance > 0:
+            added_progress = max(5, min(50, distance / 10))  # Мінімум 5%, максимум 50%
+            self.progress += added_progress
+            if self.progress > 100:
+                self.progress = 100
+            self.is_lighting_active = True  # Вмикаємо освітлення
+            print(f"Прогрес костра збільшено на {added_progress}%. Поточний прогрес: {self.progress}%")

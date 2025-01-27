@@ -32,13 +32,8 @@ while running:
                 player.f_pressed = True
                 print("Клавіша 'f' натиснута")
 
-                # Гравець може просто знищувати бревно, якщо він його несе
-                if player.carried_log:
-                    player.carried_log.kill()
-                    player.carried_log = None
-                    player.count_wood -= 1
-                    print("Гравець позбавився бревна!")
-
+                # Обробка додавання бревна до костра
+                level.handle_log_to_fire(player)
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_f:
                 player.f_pressed = False

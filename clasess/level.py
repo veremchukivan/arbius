@@ -1,4 +1,5 @@
 # clasess/level.py
+import random
 
 import pygame as pg
 from pytmx.util_pygame import load_pygame
@@ -75,25 +76,32 @@ class Level:
             fire.update(delta_time)
 
     def load_brevno_points(self):
-        """Завантаження об'єктів з name='brevno' і відображення одного зображення."""
+        """Завантаження об'єктів з name='brevno' і випадкове розміщення."""
         brevno_image = pg.image.load("map/Tilesets/wood.png").convert_alpha()
 
-        # Масштабування
+        # Масштабування зображення
         scale_factor = 0.4
         new_width = int(brevno_image.get_width() * scale_factor)
         new_height = int(brevno_image.get_height() * scale_factor)
         brevno_image_scaled = pg.transform.scale(brevno_image, (new_width, new_height))
 
+        # Збираємо всі точки 'brevno' з карти
+        brevno_positions = []
         for layer in self.tmx_data.objectgroups:
-            for obj in layer:
-                if getattr(obj, "name", None) == "brevno":
-                    x = int(obj.x)
-                    y = int(obj.y - brevno_image.get_height() + 40)
+            if layer.name == "wood":  # Шар для бревен
+                for obj in layer:
+                    if getattr(obj, "name", None) == "brevno":
+                        brevno_positions.append((int(obj.x), int(obj.y)))
 
-                    # Створюємо спрайт у групі бревен з зменшеним rect
-                    sprite = GameSprite((x, y), brevno_image_scaled, self.brevno_group, inflate_amount=(-5, -5))
+        # Випадковий вибір точок
+        max_brevno_count = 13  # Кількість бревен, які ви хочете згенерувати
+        random_positions = random.sample(brevno_positions, min(len(brevno_positions), max_brevno_count))
 
-                    sprite.is_brevno = True  # (опційно)
+        # Створюємо спрайти для вибраних точок
+        for x, y in random_positions:
+            # Створюємо спрайт у групі бревен з зменшеним rect
+            sprite = GameSprite((x, y), brevno_image_scaled, self.brevno_group, inflate_amount=(0, 0))
+            sprite.is_brevno = True  # (опційно)
 
     def load_tiles(self):
         """Завантаження тайлів із шарів карти у відповідному порядку."""
@@ -171,6 +179,25 @@ class Level:
                 if distance <= fire.lighting_radius:
                     return True
         return False
+
+    def handle_log_to_fire(self, player):
+        """Обробляє логіку додавання бревна до костра."""
+        nearest_fire = self.is_player_near_fire(player)
+        if nearest_fire and player.carried_log:
+            # Обчислюємо відстань між бревном і костром
+            brevno_center = player.carried_log.rect.center
+            fire_center = nearest_fire.rect.center
+            distance = pg.math.Vector2(brevno_center).distance_to(fire_center)
+
+            # Додаємо прогрес до костра
+            nearest_fire.add_progress(distance)
+
+            # Видаляємо бревно
+            player.carried_log.kill()
+            player.carried_log = None
+            player.count_wood -= 1
+            print(f"Бревно підкинуто. Відстань до костра: {distance}px")
+
 
     def update(self, player, delta_time):
         """Оновлення рівня: камера, костри, прогрес-бар."""
