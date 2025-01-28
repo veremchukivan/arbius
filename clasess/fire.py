@@ -1,21 +1,24 @@
+import random
+
 import pygame as pg
 import os
 
 from clasess.firebar import Firebar
 
 class Fire(pg.sprite.Sprite):
-
-    def __init__(self, pos, assets_path, group, scale_factor=1.5, animation_speed=0.1, izona_radius=64, lighting_radius=232):
+    def __init__(self, pos, assets_path, group, scale_factor=1.5, animation_speed=0.1, izona_radius=64,
+                 lighting_radius=232):
         super().__init__(group)
         self.scale_factor = scale_factor
         self.assets_path = os.path.join(assets_path, "fire")
-        self.static_image_path = os.path.join(assets_path, "fire", "stat/ugol.png")  # Шлях до статичного зображення
+        self.static_image_path = os.path.join(assets_path, "fire", "stat/ugol.png")
         self.animation_speed = animation_speed
         self.frame_index = 0
         self.izona_radius = izona_radius
         self.lighting_radius = lighting_radius
-        self.progress = 100.0
-        self.decrease_interval = 3.0
+        self.progress = 100
+        self.decrease_interval = 1
+        self.decrease_point = 0.5
         self.timer = 0.0
 
         # Завантаження анімаційних кадрів
@@ -34,6 +37,7 @@ class Fire(pg.sprite.Sprite):
         # Встановлення початкового зображення
         self.image = self.frames[self.frame_index]
         self.rect = self.image.get_rect(center=pos)
+        self.visual_rect = self.rect.copy()  # Додаємо visual_rect
 
         # Створення маски для костра
         self.mask = pg.mask.from_surface(self.image)
@@ -75,7 +79,7 @@ class Fire(pg.sprite.Sprite):
 
     def update(self, delta_time):
         """Оновлення кадру анімації та стану костра."""
-        if self.progress > 0:
+        if self.progress > 1:
             # Оновлюємо анімацію, якщо прогрес > 0
             self.frame_index += self.animation_speed
             if self.frame_index >= len(self.frames):
@@ -95,7 +99,7 @@ class Fire(pg.sprite.Sprite):
         if self.timer >= self.decrease_interval:
             self.timer = 0.0
             if self.progress > 0:
-                self.progress -= 3
+                self.progress -= self.decrease_point
                 if self.progress < 0:
                     self.progress = 0
 
@@ -108,17 +112,24 @@ class Fire(pg.sprite.Sprite):
         screen_center = camera.apply_point(self.rect.center)
         scaled_image = camera.scale_surface(self.image)
         scaled_rect = scaled_image.get_rect(center=screen_center)
-        surface.blit(scaled_image, scaled_rect.topleft)
 
-        # Малюємо прогрес-бар над костром
-        self.progress_bar.draw(surface, scaled_rect)
+        # Перевіряємо, чи костер знаходиться у видимій зоні
+        if surface.get_rect().colliderect(scaled_rect):
+            surface.blit(scaled_image, scaled_rect.topleft)
 
-    def add_progress(self, distance):
+            # Малюємо прогрес-бар над костром, якщо прогрес більше 0
+            if self.progress > 0:
+                self.progress_bar.draw(surface, scaled_rect)
+
+    def add_progress(self):
         """Збільшує прогрес бар на основі відстані до костра."""
-        if distance > 0:
-            added_progress = max(5, min(50, distance / 10))  # Мінімум 5%, максимум 50%
+
+        added_progress = random.randint(1,20)
+        if self.progress >0:
             self.progress += added_progress
             if self.progress > 100:
                 self.progress = 100
             self.is_lighting_active = True
-            print(f"Прогрес костра збільшено на {added_progress}%. Поточний прогрес: {self.progress}%")
+            print(added_progress)
+
+

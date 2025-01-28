@@ -140,7 +140,7 @@ class Level:
                                 y * self.tmx_data.tileheight - tile_image.get_height() + 20
                             )
                             GameSprite(pos, tile_image, self.tree_group,
-                                       inflate_amount=(-5, -5))  # Додати в групу дерев з зменшеним rect
+                                       inflate_amount=(-5, -5))
 
     def load_fire(self):
         """Завантаження об'єктів вогню з міткою 'campf'."""
@@ -184,19 +184,13 @@ class Level:
         """Обробляє логіку додавання бревна до костра."""
         nearest_fire = self.is_player_near_fire(player)
         if nearest_fire and player.carried_log:
-            # Обчислюємо відстань між бревном і костром
-            brevno_center = player.carried_log.rect.center
-            fire_center = nearest_fire.rect.center
-            distance = pg.math.Vector2(brevno_center).distance_to(fire_center)
-
-            # Додаємо прогрес до костра
-            nearest_fire.add_progress(distance)
-
-            # Видаляємо бревно
-            player.carried_log.kill()
-            player.carried_log = None
-            player.count_wood -= 1
-            print(f"Бревно підкинуто. Відстань до костра: {distance}px")
+            for i in self.fire_group:
+                if i.progress > 0:
+                    # Обчислюємо відстань між бревном і костром
+                    nearest_fire.add_progress()
+                    player.carried_log.kill()
+                    player.carried_log = None
+                    player.count_wood -= 1
 
 
     def update(self, player, delta_time):
@@ -262,49 +256,37 @@ class Level:
                                   min(player.rect.centery, self.map_height - player.rect.height // 2))
 
     def render(self, player):
-        """Відображаємо усі шари та об'єкти з урахуванням масштабу."""
+        """Відображаємо тільки ті об'єкти, які видно у вікні камери."""
+        visible_area = self.camera.get_visible_area()
+
         # Вода
         for tile in self.water_group:
-            zoomed_pos = self.camera.apply(tile.visual_rect)
-            zoomed_image = self.camera.scale_surface(tile.image)
-            self.screen.blit(zoomed_image, zoomed_pos.topleft)
+            if tile.rect.colliderect(visible_area):
+                zoomed_pos = self.camera.apply(tile.visual_rect)
+                zoomed_image = self.camera.scale_surface(tile.image)
+                self.screen.blit(zoomed_image, zoomed_pos.topleft)
 
         # База
         for tile in self.base_group:
-            zoomed_pos = self.camera.apply(tile.visual_rect)
-            zoomed_image = self.camera.scale_surface(tile.image)
-            self.screen.blit(zoomed_image, zoomed_pos.topleft)
+            if tile.rect.colliderect(visible_area):
+                zoomed_pos = self.camera.apply(tile.visual_rect)
+                zoomed_image = self.camera.scale_surface(tile.image)
+                self.screen.blit(zoomed_image, zoomed_pos.topleft)
 
-        # Декор
-        for tile in self.decore_group:
-            zoomed_pos = self.camera.apply(tile.visual_rect)
-            zoomed_image = self.camera.scale_surface(tile.image)
-            self.screen.blit(zoomed_image, zoomed_pos.topleft)
+        # Інші об'єкти: дерева, декор, бревна, вогонь
+        for group in [self.decore_group,self.flower_group, self.tree_group, self.brevno_group, self.fire_group]:
+            for obj in group:
+                if obj.rect.colliderect(visible_area):
+                    zoomed_pos = self.camera.apply(obj.visual_rect)
+                    zoomed_image = self.camera.scale_surface(obj.image)
+                    self.screen.blit(zoomed_image, zoomed_pos.topleft)
 
-        # Квіти
-        for tile in self.flower_group:
-            zoomed_pos = self.camera.apply(tile.visual_rect)
-            zoomed_image = self.camera.scale_surface(tile.image)
-            self.screen.blit(zoomed_image, zoomed_pos.topleft)
-
-        # Дерева
-        for obj in self.tree_group:
-            zoomed_pos = self.camera.apply(obj.visual_rect)
-            zoomed_image = self.camera.scale_surface(obj.image)
-            self.screen.blit(zoomed_image, zoomed_pos.topleft)
-
-        # Бревна
-        for brevno in self.brevno_group:
-            zoomed_pos = self.camera.apply(brevno.visual_rect)
-            zoomed_image = self.camera.scale_surface(brevno.image)
-            self.screen.blit(zoomed_image, zoomed_pos.topleft)
-
-        # Вогонь і його прогрес-бар
         for fire in self.fire_group:
             fire.draw(self.screen, self.camera)
 
         # Відображення піднятого бревна
-        if player.carried_log:
+        if player.carried_log and player.carried_log.rect.colliderect(visible_area):
             zoomed_pos = self.camera.apply(player.carried_log.rect)
             zoomed_image = self.camera.scale_surface(player.carried_log.image)
             self.screen.blit(zoomed_image, zoomed_pos.topleft)
+
