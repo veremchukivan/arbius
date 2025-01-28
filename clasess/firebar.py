@@ -36,5 +36,5 @@ class Firebar:
             bar_width = self.current_bar_image.get_width()
             bar_height = self.current_bar_image.get_height()
             bar_x = fire_rect.centerx - bar_width // 2
-            bar_y = fire_rect.top - bar_height - 10  # Відступ 10 пікселів над костром
+            bar_y = fire_rect.top - bar_height - 10
             surface.blit(self.current_bar_image, (bar_x, bar_y))
