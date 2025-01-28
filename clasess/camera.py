@@ -10,6 +10,9 @@ class Camera:
         self.x = 0
         self.y = 0
 
+        self.camera_rect = pygame.Rect(0, 0, screen_width // zoom, screen_height // zoom)
+
+
     def update(self, target_rect):
         # Центруємо камеру на гравці
         self.x = target_rect.centerx - (self.width // (2 * self.zoom))
@@ -41,3 +44,12 @@ class Camera:
         width = int(surface.get_width() * self.zoom)
         height = int(surface.get_height() * self.zoom)
         return pygame.transform.scale(surface, (width, height))
+
+    def get_visible_area(self):
+        """Повертає область видимості для камери."""
+        return pygame.Rect(
+            self.x,
+            self.y,
+            self.width / self.zoom,
+            self.height / self.zoom,
+        )

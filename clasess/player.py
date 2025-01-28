@@ -39,7 +39,7 @@ class Player(pg.sprite.Sprite):
         # Атрибути для прогрес-бару та замерзання
         self.cold_progress = 0.0
         self.max_cold = 100.0
-        self.cold_increase_amount = 3.5  
+        self.cold_increase_amount = 0
         self.cold_increase_interval = 2  # Інтервал в секундах
         self.cold_timer = 0.0  # Таймер для збільшення холоду
         self.is_frozen = False
