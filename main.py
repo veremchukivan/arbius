@@ -50,7 +50,7 @@ def main_game(screen):
 def main():
     pg.init()
     screen = pg.display.set_mode((1280, 720))
-    pg.display.set_caption("Гра зі стартовим меню і паузою")
+    pg.display.set_caption("Arbius-fire at night")
 
     # Запускаємо стартове меню
     start_menu = StartMenu(screen)

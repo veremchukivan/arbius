@@ -9,6 +9,7 @@ class Fire(pg.sprite.Sprite):
         super().__init__(group)
         self.scale_factor = scale_factor
         self.assets_path = os.path.join(assets_path, "fire")
+        self.static_image_path = os.path.join(assets_path, "fire", "stat/ugol.png")  # Шлях до статичного зображення
         self.animation_speed = animation_speed
         self.frame_index = 0
         self.izona_radius = izona_radius
@@ -19,6 +20,9 @@ class Fire(pg.sprite.Sprite):
 
         # Завантаження анімаційних кадрів
         self.frames = self.load_frames()
+
+        # Завантаження статичного зображення
+        self.static_image = self.load_static_image()
 
         # Ініціалізація прогрес-бару
         bars_path = os.path.join(assets_path, "bars", "fireB")
@@ -41,7 +45,7 @@ class Fire(pg.sprite.Sprite):
         """Завантаження анімаційних кадрів з папки."""
         frames = []
         for filename in sorted(os.listdir(self.assets_path)):
-            if filename.endswith('.png'):
+            if filename.endswith('.png') and filename != "static.png":  # Виключаємо статичне зображення
                 frame_path = os.path.join(self.assets_path, filename)
                 frame_image = pg.image.load(frame_path).convert_alpha()
                 if self.scale_factor != 1:
@@ -55,13 +59,34 @@ class Fire(pg.sprite.Sprite):
             raise ValueError(f"Не знайдено жодного кадру анімації в папці {self.assets_path}")
         return frames
 
+    def load_static_image(self):
+        """Завантаження статичного зображення для костра."""
+        if os.path.exists(self.static_image_path):
+            static_image = pg.image.load(self.static_image_path).convert_alpha()
+            if self.scale_factor != 1:
+                static_image = pg.transform.scale(
+                    static_image,
+                    (int(static_image.get_width() * self.scale_factor),
+                     int(static_image.get_height() * self.scale_factor))
+                )
+            return static_image
+        else:
+            raise FileNotFoundError(f"Не знайдено статичного зображення: {self.static_image_path}")
+
     def update(self, delta_time):
         """Оновлення кадру анімації та стану костра."""
-        self.frame_index += self.animation_speed
-        if self.frame_index >= len(self.frames):
-            self.frame_index = 0
+        if self.progress > 0:
+            # Оновлюємо анімацію, якщо прогрес > 0
+            self.frame_index += self.animation_speed
+            if self.frame_index >= len(self.frames):
+                self.frame_index = 0
+            self.image = self.frames[int(self.frame_index)]
+        else:
+            # Переключаємо на статичне зображення, якщо прогрес == 0
+            self.image = self.static_image
+            self.is_lighting_active = False
+
         old_center = self.rect.center
-        self.image = self.frames[int(self.frame_index)]
         self.rect = self.image.get_rect(center=old_center)
         self.mask = pg.mask.from_surface(self.image)
 
@@ -73,8 +98,6 @@ class Fire(pg.sprite.Sprite):
                 self.progress -= 3
                 if self.progress < 0:
                     self.progress = 0
-            if self.progress == 0:
-                self.is_lighting_active = False
 
         # Оновлюємо прогрес-бар
         self.progress_bar.update(self.progress)
