@@ -1,4 +1,3 @@
-import random
 import pygame as pg
 from clasess.level import Level
 from clasess.player import Player
@@ -9,7 +8,9 @@ from clasess.storm import Storm  # Імпортуємо клас Storm
 
 def main_game(screen):
     """Основний ігровий цикл з підтримкою рівнів."""
-    level = Level("map/map.tmx", screen)
+
+    current_level= 0
+    level = Level("map/map.tmx", screen,current_level)
     player = Player(x=1700, y=2300, speed=4, assets_path="assets")
     bar = playerbar(assets_path="assets", screen=screen)
 
@@ -19,9 +20,9 @@ def main_game(screen):
 
     # Рівні гри
     levels = [
-        {"duration": 90, "freezing_rate": 3, "fire_decay_rate": 3.5},
+        {"duration": 90, "freezing_rate": 1, "fire_decay_rate": 3.5},
         {"duration": 120, "freezing_rate": 3.5, "fire_decay_rate": 4.5},
-        {"duration": 180,"freezing_rate": 4.2, "fire_decay_rate": 5.5},
+        {"duration": 180, "freezing_rate": 4.2, "fire_decay_rate": 5.5},
     ]
 
     current_level = 0
@@ -35,12 +36,20 @@ def main_game(screen):
 
         # Перехід між рівнями
         if current_level < len(levels) and level_timer >= levels[current_level]["duration"]:
-            # Відображення заставки
+            if current_level == len(levels) - 1:
+                # Гравець виграв гру після третьої ночі
+                show_victory_screen(screen)
+                return  # Виходимо з гри після перемоги
             show_level_transition(screen, current_level + 1)
             current_level += 1
             if current_level < len(levels):
                 level_timer = 0
-                apply_level_changes(level, player, levels[current_level])
+                apply_level_changes(level, player, levels[current_level], current_level)
+
+        # Перевірка смерті
+        if player.is_frozen:
+            show_death_screen(screen)
+            return
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -49,17 +58,18 @@ def main_game(screen):
                 if event.key == pg.K_f and not player.f_pressed:
                     player.f_pressed = True
                     level.handle_log_to_fire(player)
-                elif event.key == pg.K_ESCAPE:  # Відкрити меню паузи
+                elif event.key == pg.K_ESCAPE:
                     paused = True
-                elif event.key == pg.K_TAB:  # Пропустити рівень
-                    if current_level < len(levels):
+                elif event.key == pg.K_TAB:
+                    if current_level < len(levels) - 1:
                         show_level_transition(screen, current_level + 1)
                         current_level += 1
-                        if current_level < len(levels):
-                            level_timer = 0
-                            apply_level_changes(level, player, levels[current_level])
-                        else:
-                            print("Ви досягли останнього рівня!")
+                        level_timer = 0
+                        apply_level_changes(level, player, levels[current_level], current_level)
+                    else:
+                        show_victory_screen(screen)
+                        return
+
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_f:
                     player.f_pressed = False
@@ -73,6 +83,8 @@ def main_game(screen):
                 running = False
                 paused = False
 
+            screen.fill((0, 0, 0))
+            pause_menu.display_menu()
             pg.display.flip()
 
         # Логіка шторму
@@ -105,9 +117,62 @@ def main_game(screen):
         if storm.is_active:
             storm.draw()
 
-        draw_level_timer(screen, level_timer, levels[current_level]["duration"])
+        # Відображення таймера рівня (перевіряємо, чи рівень ще існує)
+        if current_level < len(levels):
+            draw_level_timer(screen, level_timer, levels[current_level]["duration"])
 
         pg.display.flip()
+
+def show_death_screen(screen):
+    """Показує екран смерті, коли гравець замерзає."""
+    font = pg.font.Font(None, 74)
+    message = "Ви замерзли..."
+    instructions = "Натисніть Enter, щоб вийти"
+
+    screen.fill((0, 0, 0))
+    text = font.render(message, True, (255, 0, 0))  # Червоний текст
+    sub_text = font.render(instructions, True, (200, 200, 200))
+
+    screen.blit(text, (screen.get_width() // 2 - text.get_width() // 2, screen.get_height() // 2 - 100))
+    screen.blit(sub_text, (screen.get_width() // 2 - sub_text.get_width() // 2, screen.get_height() // 2))
+
+    pg.display.flip()
+
+    waiting = True
+    while waiting:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                exit()
+            elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+                waiting = False
+
+def show_victory_screen(screen):
+    """Показує екран перемоги, якщо гравець пережив усі 3 ночі."""
+    font = pg.font.Font(None, 74)
+    message = "Ви вижили! Вітаємо!"
+    instructions = "Натисніть Enter, щоб вийти"
+
+    screen.fill((0, 0, 0))
+    text = font.render(message, True, (0, 255, 0))  # Зелений текст (перемога)
+    sub_text = font.render(instructions, True, (200, 200, 200))
+
+    screen.blit(text, (screen.get_width() // 2 - text.get_width() // 2, screen.get_height() // 2 - 100))
+    screen.blit(sub_text, (screen.get_width() // 2 - sub_text.get_width() // 2, screen.get_height() // 2))
+
+    pg.display.flip()
+
+    waiting = True
+    while waiting:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                exit()
+            elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+                waiting = False  # Виходимо з циклу
+                pg.quit()  # Закриваємо гру
+                exit()
+
 
 
 
@@ -121,23 +186,23 @@ def draw_level_timer(screen, level_timer, level_duration):
     screen.blit(timer_text, text_rect)
 
 
-
-def apply_level_changes(level, player, level_data):
+def apply_level_changes(level, player, level_data, current_level):
     """Застосовує зміни параметрів для поточного рівня."""
+
     for fire in level.fire_group:
-        # Скидаємо прогрес бар костра до 100%
-        fire.progress = 100
-        fire.decrease_point *= level_data["fire_decay_rate"]  # Збільшення швидкості зменшення прогресу
-        fire.lighting_radius -= 150  # Зменшення радіусу освітлення
-        if fire.lighting_radius < 0:
-            fire.lighting_radius = 0  # Мінімальне значення
-        fire.lighting_surface = fire.create_lighting_surface()  # Оновлюємо поверхню освітлення
-        fire.progress_bar.update(fire.progress)  # Оновлюємо графічний бар
+        fire.progress = 100  # Скидаємо прогрес костра
+        fire.decrease_point = level_data["fire_decay_rate"]  # Встановлюємо згасання костра згідно з рівнем
+        fire.decrease_interval = 1  # Зробимо зменшення стабільним кожну секунду
 
-    # Скидаємо холод персонажа до 0% і збільшуємо швидкість замерзання
-    player.cold_progress = 0
-    player.cold_increase_amount = level_data["freezing_rate"]  # Базове значення 5.0 множимо на коефіцієнт
+        # Зменшуємо радіус освітлення з кожним рівнем
+        fire.lighting_radius = max(232, fire.lighting_radius - (current_level * 100))
+        fire.lighting_surface = fire.create_lighting_surface()  # Оновлення графічного відображення освітлення
+        fire.progress_bar.update(fire.progress)  # Оновлення прогрес-бару костра
 
+    # Оновлення швидкості замерзання персонажа
+    player.cold_progress = 0  # Скидання холоду
+    player.default_cold_increase = level_data["freezing_rate"]  # Базове значення
+    player.cold_increase_amount = player.default_cold_increase  # Оновлення активного параметра
 
 
 

@@ -8,7 +8,6 @@ import pytmx
 from clasess.camera import Camera
 from clasess.fire import Fire  # Імпортуємо клас Fire
 
-TILE_SIZE = 32
 
 class GameSprite(pg.sprite.Sprite):
     def __init__(self, pos, surf, group, inflate_amount=(0, 0)):
@@ -37,10 +36,11 @@ class GameSprite(pg.sprite.Sprite):
             self.rect = self.rect.inflate(*inflate_amount)
 
 class Level:
-    def __init__(self, tmx_file, screen, assets_path="assets"):
+    def __init__(self, tmx_file, screen, current_level=0, assets_path="assets"):
         self.screen = screen
         self.tmx_data = load_pygame(tmx_file)
         self.assets_path = assets_path
+        self.current_level = current_level  # Збереження рівня всередині об'єкта
 
         # Розміри карти
         self.map_width = self.tmx_data.width * self.tmx_data.tilewidth
@@ -50,8 +50,8 @@ class Level:
         self.camera = Camera(screen.get_width(), screen.get_height(), self.map_width, self.map_height, zoom=3.5)
 
         # Групи спрайтів
-        self.water_group = pg.sprite.Group()  # Шар води
-        self.base_group = pg.sprite.Group()  # Базовий шар
+        self.water_group = pg.sprite.Group()
+        self.base_group = pg.sprite.Group()
         self.decore_group = pg.sprite.Group()
         self.flower_group = pg.sprite.Group()
         self.apple_group = pg.sprite.Group()
@@ -59,17 +59,18 @@ class Level:
         # Object group
         self.tree_group = pg.sprite.Group()
         self.brevno_group = pg.sprite.Group()
-        self.fire_group = pg.sprite.Group()  # Група вогню
+        self.fire_group = pg.sprite.Group()
 
-        # Завантаження шарів і об'єктів
+        # Завантаження об'єктів
         self.load_tiles()
         self.load_trees()
         self.load_brevno_points()
-        self.load_fire()
+        self.load_fire(self.current_level)  # Передаємо рівень у `load_fire`
 
         # Колізійна група
         self.collision_group = pg.sprite.Group()
-        self.collision_group.add(*self.water_group, *self.tree_group, *self.decore_group, *self.fire_group)
+        self.collision_group.add(*self.water_group, *self.decore_group, *self.tree_group, *self.fire_group)
+
 
     def updatef(self,delta_time):
         for fire in self.fire_group:
@@ -142,7 +143,7 @@ class Level:
                             GameSprite(pos, tile_image, self.tree_group,
                                        inflate_amount=(-5, -5))
 
-    def load_fire(self):
+    def load_fire(self, current_level):
         """Завантаження об'єктів вогню з міткою 'campf'."""
         for layer in self.tmx_data.objectgroups:
             for obj in layer:
@@ -150,8 +151,8 @@ class Level:
                     x = int(obj.x)
                     y = int(obj.y)
 
-                    # Створюємо анімований вогонь з єдиним радіусом
-                    Fire(pos=(x, y), assets_path=self.assets_path, group=self.fire_group)
+                    # Передаємо `current_level` у Fire
+                    Fire(pos=(x, y), assets_path=self.assets_path, group=self.fire_group, current_level=current_level)
 
     def is_player_near_fire(self, player):
         """Знаходить костер, до якого гравець може взаємодіяти."""

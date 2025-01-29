@@ -41,7 +41,7 @@ class Player(pg.sprite.Sprite):
         self.max_cold = 100.0
         self.cold_increase_amount = 1
         self.cold_increase_interval = 2  # Інтервал в секундах
-        self.cold_timer = 0.0  # Таймер для збільшення холоду
+        self.cold_timer = 0 # Таймер для збільшення холоду
         self.is_frozen = False
 
         # Завантаження графічного ресурсу для додаткового прогрес-бару
@@ -139,13 +139,12 @@ class Player(pg.sprite.Sprite):
         self.mask = pg.mask.from_surface(self.image)
 
         # Оновлення прогрес-бару холоду
-        if in_lighting_zone:
-            self.decrease_cold(delta_time)
+        if not in_lighting_zone:
+            self.cold_progress += self.cold_increase_amount * delta_time
         else:
-            self.increase_cold(delta_time)
+            self.cold_progress = max(0, self.cold_progress - (self.cold_increase_amount * delta_time * 2))
 
     def increase_cold(self, delta_time):
-        """Збільшення холоду на 10% кожні 3 секунди."""
         self.cold_timer += delta_time
         if self.cold_timer >= self.cold_increase_interval:
             self.cold_progress += self.cold_increase_amount
