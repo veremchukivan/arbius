@@ -1,5 +1,4 @@
 import sys
-
 import pygame
 
 class PauseMenu:
@@ -8,6 +7,7 @@ class PauseMenu:
         self.font = pygame.font.Font(None, 74)
 
     def display_menu(self):
+        """Малює екран паузи"""
         pause_overlay = pygame.Surface(self.screen.get_size(), pygame.SRCALPHA)
         pause_overlay.fill((0, 0, 0, 150))  # Напівпрозорий фон
         self.screen.blit(pause_overlay, (0, 0))
@@ -29,7 +29,9 @@ class PauseMenu:
         return continue_button_rect, exit_button_rect
 
     def handle_events(self):
+        """Обробка подій меню паузи"""
         continue_button_rect, exit_button_rect = self.display_menu()
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -37,6 +39,9 @@ class PauseMenu:
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if continue_button_rect.collidepoint(event.pos):
-                        return "continue"
+                        return "resume"
                     elif exit_button_rect.collidepoint(event.pos):
                         return "exit"
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_RETURN:
+                        return "resume"  # Вихід з паузи по ESC або Enter

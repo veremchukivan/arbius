@@ -1,12 +1,11 @@
 import random
-
 import pygame as pg
 import os
 
 from clasess.firebar import Firebar
 
 class Fire(pg.sprite.Sprite):
-    def __init__(self, pos, assets_path, group, scale_factor=1.5, animation_speed=0.1, izona_radius=64,lighting_radius=500):
+    def __init__(self, pos, assets_path, group, scale_factor=1.5, animation_speed=0.1, izona_radius=64, lighting_radius=500):
         super().__init__(group)
         self.scale_factor = scale_factor
         self.assets_path = os.path.join(assets_path, "fire")
@@ -17,7 +16,7 @@ class Fire(pg.sprite.Sprite):
         self.lighting_radius = lighting_radius
         self.progress = 100
         self.decrease_interval = 1
-        self.decrease_point = 0.5
+        self.decrease_point = 1
         self.timer = 0.0
 
         # Завантаження анімаційних кадрів
@@ -138,20 +137,18 @@ class Fire(pg.sprite.Sprite):
         if surface.get_rect().colliderect(scaled_rect):
             surface.blit(scaled_image, scaled_rect.topleft)
 
-            # Малюємо прогрес-бар над костром, якщо прогрес більше 0
-            if self.progress > 0:
-                self.progress_bar.draw(surface, scaled_rect)
+
 
         self.draw_lighting(surface, camera)
+
+
+
     def add_progress(self):
         """Збільшує прогрес бар на основі відстані до костра."""
-
-        added_progress = random.randint(1,20)
-        if self.progress >0:
+        added_progress = random.randint(5, 20)
+        if self.progress > 0:
             self.progress += added_progress
             if self.progress > 100:
                 self.progress = 100
             self.is_lighting_active = True
             print(added_progress)
-
-
