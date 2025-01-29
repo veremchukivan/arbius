@@ -231,7 +231,7 @@ class Level:
                     self.collision_group.add(*self.brevno_group)
 
     def handle_collisions(self, player):
-        # Переміщення по осі X та перевірка колізій
+        # Рух по осі X
         player.rect.centerx += player.velocity.x
         collided_sprites = pg.sprite.spritecollide(player, self.collision_group, False, pg.sprite.collide_rect)
         if collided_sprites:
@@ -240,7 +240,7 @@ class Level:
             elif player.velocity.x < 0:  # Рух вліво
                 player.rect.left = max(sprite.rect.right for sprite in collided_sprites)
 
-        # Переміщення по осі Y та перевірка колізій
+        # Рух по осі Y
         player.rect.centery += player.velocity.y
         collided_sprites = pg.sprite.spritecollide(player, self.collision_group, False, pg.sprite.collide_rect)
         if collided_sprites:
@@ -256,7 +256,7 @@ class Level:
                                   min(player.rect.centery, self.map_height - player.rect.height // 2))
 
     def render(self, player):
-        """Відображаємо тільки ті об'єкти, які видно у вікні камери."""
+        """Відображаємо об'єкти, які видно у вікні камери, та прогрес-бар костра."""
         visible_area = self.camera.get_visible_area()
 
         # Вода
@@ -274,7 +274,7 @@ class Level:
                 self.screen.blit(zoomed_image, zoomed_pos.topleft)
 
         # Інші об'єкти: дерева, декор, бревна, вогонь
-        for group in [self.decore_group,self.flower_group, self.tree_group, self.brevno_group, self.fire_group]:
+        for group in [self.decore_group, self.flower_group, self.tree_group, self.brevno_group, self.fire_group]:
             for obj in group:
                 if obj.rect.colliderect(visible_area):
                     zoomed_pos = self.camera.apply(obj.visual_rect)
@@ -290,3 +290,16 @@ class Level:
             zoomed_image = self.camera.scale_surface(player.carried_log.image)
             self.screen.blit(zoomed_image, zoomed_pos.topleft)
 
+        # Відображення прогрес-бару активного костра у верхній частині екрану
+        self.draw_fire_progress_bar()
+
+    def draw_fire_progress_bar(self):
+        # Беремо перший активний костер
+        for fire in self.fire_group:
+            if fire.progress > 0:  # Якщо костер активний
+                if fire.progress_bar.current_bar_image:
+                    bar_image = fire.progress_bar.current_bar_image
+                    bar_x = self.screen.get_width() // 2 - bar_image.get_width() // 2
+                    bar_y = 10  # Відстань від верхнього краю
+                    self.screen.blit(bar_image, (bar_x, bar_y))
+                break

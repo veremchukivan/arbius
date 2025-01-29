@@ -32,7 +32,7 @@ class Storm:
 
     def try_start(self):
         """Спроба запустити шторм з 12% шансом."""
-        if random.random() <= 0.12:  # 12% шанс
+        if random.random() <= 0.25:  # 12% шанс
             self.start()
 
     def start(self):

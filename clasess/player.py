@@ -39,7 +39,7 @@ class Player(pg.sprite.Sprite):
         # Атрибути для прогрес-бару та замерзання
         self.cold_progress = 0.0
         self.max_cold = 100.0
-        self.cold_increase_amount = 0
+        self.cold_increase_amount = 1
         self.cold_increase_interval = 2  # Інтервал в секундах
         self.cold_timer = 0.0  # Таймер для збільшення холоду
         self.is_frozen = False
@@ -103,21 +103,25 @@ class Player(pg.sprite.Sprite):
             self.is_moving = False
 
             if keys[pg.K_a] or keys[pg.K_LEFT]:
-                self.velocity.x = -self.speed
+                self.velocity.x = -1  # Використовуємо -1 замість швидкості
                 self.current_animation = "left"
                 self.is_moving = True
             elif keys[pg.K_d] or keys[pg.K_RIGHT]:
-                self.velocity.x = self.speed
+                self.velocity.x = 1
                 self.current_animation = "right"
                 self.is_moving = True
             if keys[pg.K_w] or keys[pg.K_UP]:
-                self.velocity.y = -self.speed
+                self.velocity.y = -1
                 self.current_animation = "up"
                 self.is_moving = True
             elif keys[pg.K_s] or keys[pg.K_DOWN]:
-                self.velocity.y = self.speed
+                self.velocity.y = 1
                 self.current_animation = "down"
                 self.is_moving = True
+
+            # **Нормалізація швидкості**
+            if self.velocity.length() > 0:
+                self.velocity = self.velocity.normalize() * self.speed
 
         # Оновлення анімації
         self.update_animation()
