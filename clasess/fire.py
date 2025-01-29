@@ -5,7 +5,7 @@ import os
 from clasess.firebar import Firebar
 
 class Fire(pg.sprite.Sprite):
-    def __init__(self, pos, assets_path, group, scale_factor=1.5, animation_speed=0.1, izona_radius=64, lighting_radius=500):
+    def __init__(self, pos, assets_path, group, current_level=0, scale_factor=1.5, animation_speed=0.1, izona_radius=64, lighting_radius=500):
         super().__init__(group)
         self.scale_factor = scale_factor
         self.assets_path = os.path.join(assets_path, "fire")
@@ -13,11 +13,14 @@ class Fire(pg.sprite.Sprite):
         self.animation_speed = animation_speed
         self.frame_index = 0
         self.izona_radius = izona_radius
+
+        # Автоматичне встановлення lighting_radius, якщо він не переданий
         self.lighting_radius = lighting_radius
+
         self.progress = 100
-        self.decrease_interval = 1
+        self.decrease_interval = 2
         self.decrease_point = 1
-        self.timer = 0.0
+        self.timer = 0
 
         # Завантаження анімаційних кадрів
         self.frames = self.load_frames()
@@ -45,22 +48,41 @@ class Fire(pg.sprite.Sprite):
 
         self.lighting_surface = self.create_lighting_surface()
 
+        # Додаємо лог для перевірки
+        print(f"Костер створений: pos={pos}, level={current_level}, lighting_radius={self.lighting_radius}")
+
+
+    # def create_lighting_surface(self):
+    #     """Створює поверхню для зони освітлення з градієнтом."""
+    #     surface_size = self.lighting_radius * 2
+    #     surface = pg.Surface((surface_size, surface_size), pg.SRCALPHA)  # Прозорий шар
+    #
+    #     center = (self.lighting_radius, self.lighting_radius)
+    #
+    #     # Малюємо градієнтні кола (від більш світлого центру до темнішого краю)
+    #     for i in range(10, 0, -1):  # 10 шарів градієнта
+    #         alpha = int(64 * (i / 10))  # Прозорість змінюється від 255 до 25
+    #         color = (255, 140, 0, alpha)
+    #         radius = int(self.lighting_radius * (i / 10))
+    #         pg.draw.circle(surface, color, center, radius)
+    #
+    #     return surface
+
     def create_lighting_surface(self):
-        """Створює поверхню для зони освітлення."""
+        """Створює поверхню з контуром зони освітлення."""
         surface_size = self.lighting_radius * 2
         surface = pg.Surface((surface_size, surface_size), pg.SRCALPHA)  # Прозорий шар
-
         center = (self.lighting_radius, self.lighting_radius)
 
-        # Малюємо напівпрозорий оранжевий круг
-        color = (255, 140, 0, 30)  # Ледь видимий оранжевий
-        pg.draw.circle(surface, color, center, self.lighting_radius)
+        # Контур освітлення (помаранчеве коло)
+        color = (255, 140, 0, 200)  # Оранжевий колір, напівпрозорий
+        pg.draw.circle(surface, color, center, self.lighting_radius, width=3)  # Товщина контуру = 3 пікселі
 
         return surface
 
     def draw_lighting(self, surface, camera):
         """Малює зону освітлення."""
-        if self.is_lighting_active:
+        if self.is_lighting_active and self.lighting_radius > 0:
             screen_center = camera.apply_point(self.rect.center)
             lighting_rect = self.lighting_surface.get_rect(center=screen_center)
             surface.blit(self.lighting_surface, lighting_rect.topleft)
@@ -100,13 +122,11 @@ class Fire(pg.sprite.Sprite):
     def update(self, delta_time):
         """Оновлення кадру анімації та стану костра."""
         if self.progress > 1:
-            # Оновлюємо анімацію, якщо прогрес > 0
             self.frame_index += self.animation_speed
             if self.frame_index >= len(self.frames):
                 self.frame_index = 0
             self.image = self.frames[int(self.frame_index)]
         else:
-            # Переключаємо на статичне зображення, якщо прогрес == 0
             self.image = self.static_image
             self.is_lighting_active = False
 
@@ -125,6 +145,12 @@ class Fire(pg.sprite.Sprite):
 
         # Оновлюємо прогрес-бар
         self.progress_bar.update(self.progress)
+
+        if self.progress > 1:
+            self.is_lighting_active = True
+            self.lighting_surface = self.create_lighting_surface()  # Оновлюємо освітлення
+        else:
+            self.is_lighting_active = False
 
     def draw(self, surface, camera):
         """Малювання костра та його прогрес-бару."""
