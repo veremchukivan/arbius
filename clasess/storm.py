@@ -42,9 +42,9 @@ class Storm:
         self.frame_index = 0
 
         # Встановлюємо бонуси для костра та гравця
-        self.fire_decay_bonus = random.uniform(4, 7)
-        self.player_freezing_bonus = random.uniform(4, 7)
-        print(f"Шторм почався! Бонуси: Fire - {self.fire_decay_bonus*100:.2f}%, Player - {self.player_freezing_bonus*100:.2f}%")
+        self.fire_decay_bonus = random.randint(2, 4)
+        self.player_freezing_bonus = random.randint(2, 4)
+        print(f"Шторм почався! Бонуси: Fire - {self.fire_decay_bonus}, Player - {self.player_freezing_bonus}")
 
     def stop(self):
         """Зупинка шторму та скидання бонусів."""
@@ -74,9 +74,6 @@ class Storm:
             scaled_frame.set_alpha(self.opacity)
             self.screen.blit(scaled_frame, (0, 0))
 
-    def is_storm_active(self):
-        """Перевірка, чи активний шторм."""
-        return self.is_active
 
     def get_fire_decay_rate(self):
         """Додатковий відсоток зменшення прогресу багаття під час шторму."""

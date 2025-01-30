@@ -4,12 +4,7 @@ from clasess.player import Player
 from clasess.playerbar import playerbar
 from clasess.startMenu import StartMenu
 from clasess.pauseMenu import PauseMenu
-from clasess.storm import Storm  # Імпортуємо клас Storm
-
-import logging
-
-# Налаштування логування
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+from clasess.storm import Storm
 
 def main_game(screen):
     current_level = 0
@@ -21,10 +16,13 @@ def main_game(screen):
     storm = Storm(assets_path="assets", screen=screen)
     clock = pg.time.Clock()
 
+    storm_timer = 0
+    strom_bonus=False
+
     # Рівні гри
     levels = [
-        {"duration": 90, "freezing_rate": 2, "fire_decay_rate": 2.5},
-        {"duration": 120, "freezing_rate": 30.5, "fire_decay_rate": 3},
+        {"duration": 90, "freezing_rate": 3, "fire_decay_rate": 2.5},
+        {"duration": 120, "freezing_rate": 3.7, "fire_decay_rate": 3},
         {"duration": 180, "freezing_rate": 4.5, "fire_decay_rate": 3.7},
     ]
 
@@ -32,37 +30,15 @@ def main_game(screen):
     paused = False
     running = True
 
-    # Базове значення замерзання для поточного рівня
     base_freezing_rate = levels[current_level]["freezing_rate"]
+    base_fire_decay_rate = levels[current_level]["fire_decay_rate"]
 
-    # Додайте флаг для відстеження застосування рівня
-    level_applied = False
+
 
     while running:
         delta_time = clock.tick(60) / 1000.0  # Час, що пройшов з останнього кадру (у секундах)
         level_timer += delta_time
-
-        # Застосовуємо параметри рівня лише один раз
-        # if not level_applied:
-        #     apply_level_changes(level, player, levels[current_level], current_level)
-        #     base_freezing_rate = levels[current_level]["freezing_rate"]  # Оновлюємо базове значення
-        #     level_applied = True
-
-
-        # Перехід між рівнями
-        if current_level < len(levels) and level_timer >= levels[current_level]["duration"]:
-            if current_level == len(levels) - 1:
-                # Гравець виграв гру після останнього рівня
-                show_victory_screen(screen)
-                return  # Виходимо з гри після перемоги
-            show_level_transition(screen, current_level + 1)
-            current_level += 1
-            if current_level < len(levels):
-                level_timer = 0
-                logging.debug(f"[main_game] Переходимо до рівня {current_level}")
-                apply_level_changes(level, player, levels[current_level], current_level)
-                base_freezing_rate = levels[current_level]["freezing_rate"]  # Оновлюємо базове значення
-                level_applied = True
+        storm_timer += delta_time
 
         # Перевірка смерті
         if player.is_frozen:
@@ -83,11 +59,9 @@ def main_game(screen):
                         show_level_transition(screen, current_level + 1)
                         current_level += 1
                         level_timer = 0
-                        level_applied = False  # Скидаємо флаг для наступного рівня
-                        logging.debug(f"[main_game] Застосовуємо параметри для рівня {current_level}: {levels[current_level]}")
                         apply_level_changes(level, player, levels[current_level], current_level)
                         base_freezing_rate = levels[current_level]["freezing_rate"]
-                        level_applied = True
+                        base_fire_decay_rate = levels[current_level]["fire_decay_rate"]
                     else:
                         show_victory_screen(screen)
                         return
@@ -109,27 +83,32 @@ def main_game(screen):
             pause_menu.display_menu()
             pg.display.flip()
 
-        # Логіка шторму
+        if not storm.is_active and storm_timer >=15 :  # Перевіряємо кожні 15 секунд
+            storm_timer = 0
+            storm.try_start()
         storm.update(delta_time)
 
         # Під час шторму
         if storm.is_active:
             fire_decay_rate = storm.get_fire_decay_rate()
-            storm_bonus = storm.get_player_freezing_rate()
+            freezing_rate = storm.get_player_freezing_rate()
 
-            for fire in level.fire_group:
-                fire.decrease_point += fire_decay_rate
-
-            if not level.is_player_in_lighting_zone(player):
-                # Встановлюємо на базове значення + бонус шторму
-                player.cold_increase_amount = base_freezing_rate + storm_bonus
+            # Прискорене зменшення прогресу костра
+            if  strom_bonus == False:
+                for fire in level.fire_group:
+                    fire.decrease_point = base_fire_decay_rate + fire_decay_rate
+                player.cold_increase_amount = base_freezing_rate + freezing_rate
+                strom_bonus = True
         else:
-            if not level.is_player_in_lighting_zone(player):
-                # Встановлюємо лише базове значення
-                player.cold_increase_amount = base_freezing_rate
-            else:
-                # Якщо в зоні освітлення, зменшуємо або скидаємо
-                player.cold_increase_amount = base_freezing_rate  # Можна додатково зменшити
+            # Скидання бонусів після завершення шторму
+            for fire in level.fire_group:
+                fire.decrease_point = base_fire_decay_rate  # Повертаємо до звичайного зменшення
+            player.cold_increase_amount = base_freezing_rate  # Скидаємо замерзання
+            strom_bonus = False
+
+
+        print(f'FFbonus{fire.decrease_point}')
+        print(f'PPbonus{player.cold_increase_amount}')
 
         # Оновлення стану гри
         in_lighting_zone = level.is_player_in_lighting_zone(player)
@@ -159,15 +138,13 @@ def apply_level_changes(level, player, level_data, current_level):
         print(f"До зміни: fire.decrease_point={fire.decrease_point}, fire.lighting_radius={fire.lighting_radius}")
         fire.progress = 100  # Скидаємо прогрес костра
         fire.decrease_point = level_data["fire_decay_rate"]  # Встановлюємо новий темп згасання
-        fire.lighting_radius = max(232, fire.lighting_radius - (current_level * 100))  # Зменшуємо радіус освітлення
+        fire.lighting_radius = max(70, fire.lighting_radius - (current_level * 50))  # Зменшуємо радіус освітлення
         fire.lighting_surface = fire.create_lighting_surface()  # Оновлюємо поверхню освітлення
         fire.progress_bar.update(fire.progress)  # Оновлюємо прогрес-бар костра
-        print(f"Після зміни: fire.decrease_point={fire.decrease_point}, fire.lighting_radius={fire.lighting_radius}")
 
     player.cold_progress = 0  # Скидаємо рівень холоду
     player.cold_increase_amount = level_data["freezing_rate"]  # Встановлюємо новий темп замерзання
     print(f"Player cold_increase_amount встановлено на {player.cold_increase_amount}")
-
 
 
 
@@ -222,9 +199,6 @@ def show_victory_screen(screen):
                 exit()
 
 
-
-
-
 def draw_level_timer(screen, level_timer, level_duration):
     """Малює таймер рівня у правому верхньому куті."""
     font = pg.font.Font(None, 36)
@@ -233,21 +207,6 @@ def draw_level_timer(screen, level_timer, level_duration):
     text_rect = timer_text.get_rect(topright=(screen.get_width() - 20, 20))  # Правий верхній кут з відступом
     screen.blit(timer_text, text_rect)
 
-
-def apply_level_changes(level, player, level_data, current_level):
-    print(f"Застосовуємо параметри для рівня {current_level}: {level_data}")
-    for fire in level.fire_group:
-        print(f"До зміни: fire.decrease_point={fire.decrease_point}, fire.lighting_radius={fire.lighting_radius}")
-        fire.progress = 100  # Скидаємо прогрес костра
-        fire.decrease_point = level_data["fire_decay_rate"]  # Встановлюємо новий темп згасання
-        fire.lighting_radius = max(232, fire.lighting_radius - (current_level * 100))  # Зменшуємо радіус освітлення
-        fire.lighting_surface = fire.create_lighting_surface()  # Оновлюємо поверхню освітлення
-        fire.progress_bar.update(fire.progress)  # Оновлюємо прогрес-бар костра
-        print(f"Після зміни: fire.decrease_point={fire.decrease_point}, fire.lighting_radius={fire.lighting_radius}")
-
-    player.cold_progress = 0  # Скидаємо рівень холоду
-    player.cold_increase_amount = level_data["freezing_rate"]  # Встановлюємо новий темп замерзання
-    print(f"Player cold_increase_amount встановлено на {player.cold_increase_amount}")
 
 
 def show_level_transition(screen, level_number):

@@ -173,10 +173,10 @@ class Level:
             return None
 
     def is_player_in_lighting_zone(self, player):
-        """Перевіряє, чи знаходиться гравець у зоні освітлення будь-якого активного костра."""
         for fire in self.fire_group:
-            if fire.is_lighting_active:  # Перевіряємо, чи активна зона освітлення
+            if fire.is_lighting_active:
                 distance = pg.math.Vector2(player.rect.center).distance_to(fire.rect.center)
+                # print(f"[Debug] Distance to fire at {fire.rect.center}: {distance}, lighting_radius: {fire.lighting_radius}")
                 if distance <= fire.lighting_radius:
                     return True
         return False
@@ -211,6 +211,7 @@ class Level:
         # Оновлення прогрес-бару холоду
         if self.is_player_in_lighting_zone(player):
             player.decrease_cold(delta_time)
+
         else:
             player.increase_cold(delta_time)
 

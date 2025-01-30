@@ -142,8 +142,6 @@ class Player(pg.sprite.Sprite):
         self.cold_timer += delta_time
         if self.cold_timer >= self.cold_increase_interval:
             self.cold_progress += self.cold_increase_amount
-            print(f"[Player] cold_progress increased to {self.cold_progress}")
-            print(self.cold_increase_amount)
             self.cold_timer = 0.0
             if self.cold_progress >= self.max_cold:
                 self.cold_progress = self.max_cold
@@ -157,7 +155,6 @@ class Player(pg.sprite.Sprite):
             self.cold_progress -= warm_rate * delta_time
             if self.cold_progress < 0:
                 self.cold_progress = 0.0
-            print(f"[Player] cold_progress decreased to {self.cold_progress}")
 
     def freeze(self):
         """Замороження гравця."""
