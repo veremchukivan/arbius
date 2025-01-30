@@ -39,7 +39,7 @@ class Player(pg.sprite.Sprite):
         # Атрибути для прогрес-бару та замерзання
         self.cold_progress = 0.0
         self.max_cold = 100.0
-        self.cold_increase_amount = 1
+        self.cold_increase_amount = 0
         self.cold_increase_interval = 2  # Інтервал в секундах
         self.cold_timer = 0 # Таймер для збільшення холоду
         self.is_frozen = False
@@ -138,16 +138,12 @@ class Player(pg.sprite.Sprite):
         # Оновлення маски після руху
         self.mask = pg.mask.from_surface(self.image)
 
-        # Оновлення прогрес-бару холоду
-        if not in_lighting_zone:
-            self.cold_progress += self.cold_increase_amount * delta_time
-        else:
-            self.cold_progress = max(0, self.cold_progress - (self.cold_increase_amount * delta_time * 2))
-
     def increase_cold(self, delta_time):
         self.cold_timer += delta_time
         if self.cold_timer >= self.cold_increase_interval:
             self.cold_progress += self.cold_increase_amount
+            print(f"[Player] cold_progress increased to {self.cold_progress}")
+            print(self.cold_increase_amount)
             self.cold_timer = 0.0
             if self.cold_progress >= self.max_cold:
                 self.cold_progress = self.max_cold
@@ -157,10 +153,11 @@ class Player(pg.sprite.Sprite):
         """Зменшення холоду при знаходженні в зоні освітлення."""
         if self.cold_progress > 0 and not self.is_frozen:
             # Лінійна регенерація холоду
-            warm_rate = 2.0  # Зменшення на 5% в секунду
+            warm_rate = 2.0  # Зменшення на 4% в секунду
             self.cold_progress -= warm_rate * delta_time
             if self.cold_progress < 0:
                 self.cold_progress = 0.0
+            print(f"[Player] cold_progress decreased to {self.cold_progress}")
 
     def freeze(self):
         """Замороження гравця."""
