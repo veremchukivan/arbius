@@ -31,8 +31,8 @@ class Storm:
         return frames
 
     def try_start(self):
-        """Спроба запустити шторм з 12% шансом."""
-        if random.random() <= 0.25:  # 12% шанс
+        """Спроба запустити шторм з 45% шансом."""
+        if random.random() <= 0.45:
             self.start()
 
     def start(self):

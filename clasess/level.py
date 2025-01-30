@@ -187,7 +187,6 @@ class Level:
         if nearest_fire and player.carried_log:
             for i in self.fire_group:
                 if i.progress > 0:
-                    # Обчислюємо відстань між бревном і костром
                     nearest_fire.add_progress()
                     player.carried_log.kill()
                     player.carried_log = None
