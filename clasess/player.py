@@ -7,7 +7,6 @@ class Player(pg.sprite.Sprite):
         self.speed = speed
         self.assets_path = os.path.join(assets_path, "player")
 
-        # Завантажуємо всі анімації без масштабування
         self.animations = self.load_animations()
 
         # Початкова анімація
