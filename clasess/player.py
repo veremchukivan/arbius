@@ -1,5 +1,3 @@
-# clasess/player.py
-
 import os
 import pygame as pg
 
@@ -9,7 +7,6 @@ class Player(pg.sprite.Sprite):
         self.speed = speed
         self.assets_path = os.path.join(assets_path, "player")
 
-        # Завантажуємо всі анімації без масштабування
         self.animations = self.load_animations()
 
         # Початкова анімація
@@ -103,7 +100,7 @@ class Player(pg.sprite.Sprite):
             self.is_moving = False
 
             if keys[pg.K_a] or keys[pg.K_LEFT]:
-                self.velocity.x = -1  # Використовуємо -1 замість швидкості
+                self.velocity.x = -1
                 self.current_animation = "left"
                 self.is_moving = True
             elif keys[pg.K_d] or keys[pg.K_RIGHT]:
@@ -126,8 +123,9 @@ class Player(pg.sprite.Sprite):
         # Оновлення анімації
         self.update_animation()
 
-        # Оновлення позиції
-        self.rect.center += self.velocity
+        # Оновлення позиції з врахуванням delta_time
+        movement = self.velocity * delta_time
+        self.rect.center += movement
 
         # Обмеження в межах карти
         self.rect.centerx = max(self.rect.width // 2,
@@ -137,6 +135,12 @@ class Player(pg.sprite.Sprite):
 
         # Оновлення маски після руху
         self.mask = pg.mask.from_surface(self.image)
+
+        # Оновлення холоду
+        if in_lighting_zone:
+            self.decrease_cold(delta_time)
+        else:
+            self.increase_cold(delta_time)
 
     def increase_cold(self, delta_time):
         self.cold_timer += delta_time
@@ -151,10 +155,11 @@ class Player(pg.sprite.Sprite):
         """Зменшення холоду при знаходженні в зоні освітлення."""
         if self.cold_progress > 0 and not self.is_frozen:
             # Лінійна регенерація холоду
-            warm_rate = 2.0  # Зменшення на 4% в секунду
+            warm_rate = 2.0  # Зменшуємо холодність
             self.cold_progress -= warm_rate * delta_time
             if self.cold_progress < 0:
                 self.cold_progress = 0.0
+            print(f"[Player] cold_progress decreased to {self.cold_progress}")
 
     def freeze(self):
         """Замороження гравця."""
@@ -186,7 +191,7 @@ class Player(pg.sprite.Sprite):
         hud.update(self.cold_progress)
 
     def draw_progress_bar_over_character(self, surface, camera):
-        """Малювання прогрес-бару над персонажем."""
+
         # Визначаємо позицію бару над персонажем
         screen_center = camera.apply_point(self.rect.center)
         bar_y = screen_center[1] - self.rect.height // 2 - 50  # Розташування над персонажем
@@ -206,4 +211,3 @@ class Player(pg.sprite.Sprite):
             # Отримуємо rect для бару і центруємо його над персонажем
             bar_rect = bar_image.get_rect(center=(screen_center[0], bar_y))
             surface.blit(bar_image, bar_rect.topleft)
-
