@@ -1,40 +1,57 @@
 import sys
-import pygame
+import os
+import pygame as pg
 
 class StartMenu:
     def __init__(self, screen):
         self.screen = screen
-        self.font = pygame.font.Font(None, 74)
+        self.font = pg.font.Font(None, 74)
         self.running = True
 
-    def display_menu(self):
-        self.screen.fill((0, 0, 0))
-        title = self.font.render("Стартове меню", True, (255, 255, 255))
-        play_button = self.font.render("Почати гру", True, (255, 255, 255))
-        exit_button = self.font.render("Вийти", True, (255, 255, 255))
+        # Завантаження зображень для анімації з папки assets/start_screen
+        self.background_frames = []
+        start_screen_path = os.path.join("assets", "start_screen")
+        for filename in sorted(os.listdir(start_screen_path)):
+            if filename.endswith(".png"):
+                image_path = os.path.join(start_screen_path, filename)
+                image = pg.image.load(image_path).convert_alpha()
+                self.background_frames.append(image)
+        if not self.background_frames:
+            raise ValueError("no found")
 
-        title_rect = title.get_rect(center=(self.screen.get_width() /2 , self.screen.get_height() / 2 - 100))
-        play_button_rect = play_button.get_rect(center=(self.screen.get_width() /2 , self.screen.get_height() / 2 ))
-        exit_button_rect = exit_button.get_rect(center=(self.screen.get_width() /2 , self.screen.get_height() / 2 + 100))
+        self.current_frame_index = 0
+        self.frame_timer = 0.0
+        self.animation_speed = 0.3
 
-        self.screen.blit(title, title_rect)
-        self.screen.blit(play_button, play_button_rect)
-        self.screen.blit(exit_button, exit_button_rect)
+    def display_menu(self, delta_time):
+        # Оновлення таймера анімації
+        self.frame_timer += delta_time
+        if self.frame_timer >= self.animation_speed:
+            self.frame_timer = 0.0
+            self.current_frame_index = (self.current_frame_index + 1) % len(self.background_frames)
 
-        pygame.display.flip()
+        # Масштабування поточного кадру фону до розміру екрану
+        background = self.background_frames[self.current_frame_index]
+        background_scaled = pg.transform.scale(background, (self.screen.get_width(), self.screen.get_height()))
+        self.screen.blit(background_scaled, (0, 0))
 
-        return play_button_rect, exit_button_rect
+
+
+        pg.display.flip()
 
     def handle_events(self):
-        play_button_rect, exit_button_rect = self.display_menu()
+        clock = pg.time.Clock()
         while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
+            delta_time = clock.tick(60) / 1000.0  # Отримуємо час у секундах
+            self.display_menu(delta_time)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
                     sys.exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if play_button_rect.collidepoint(event.pos):
-                        self.running = False  # Перехід до гри
-                    elif exit_button_rect.collidepoint(event.pos):
-                        pygame.quit()
+                elif event.type == pg.KEYDOWN:
+                    if event.key == pg.K_RETURN:
+                        # Натискання Enter запускає гру
+                        self.running = False
+                    elif event.key == pg.K_ESCAPE:
+                        pg.quit()
                         sys.exit()

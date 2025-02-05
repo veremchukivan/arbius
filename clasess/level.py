@@ -58,6 +58,7 @@ class Level:
         self.swamp_group = pg.sprite.Group()
 
 
+
         # Object group
         self.tree_group = pg.sprite.Group()
         self.brevno_group = pg.sprite.Group()
@@ -73,6 +74,10 @@ class Level:
         # Колізійна група
         self.collision_group = pg.sprite.Group()
         self.collision_group.add(*self.water_group, *self.decore_group, *self.tree_group, *self.fire_group)
+
+        #minimap_group
+        self.minimapG=pg.sprite.Group()
+        self.minimapG.add(*self.water_group,*self.base_group,*self.swamp_group,*self.fire_group)
 
 
     def updatef(self,delta_time):
