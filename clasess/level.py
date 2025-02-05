@@ -55,11 +55,14 @@ class Level:
         self.decore_group = pg.sprite.Group()
         self.flower_group = pg.sprite.Group()
         self.apple_group = pg.sprite.Group()
+        self.swamp_group = pg.sprite.Group()
+
 
         # Object group
         self.tree_group = pg.sprite.Group()
         self.brevno_group = pg.sprite.Group()
         self.fire_group = pg.sprite.Group()
+
 
         # Завантаження об'єктів
         self.load_tiles()
@@ -108,9 +111,9 @@ class Level:
         """Завантаження тайлів із шарів карти у відповідному порядку."""
         for layer in self.tmx_data.visible_layers:
             if isinstance(layer, pytmx.TiledTileLayer):  # Якщо це шар плиток
-                if layer.name == "water":  # Шар води
+                if layer.name == "water":
                     self._load_layer_tiles(layer, self.water_group, inflate_amount=(-10, -10))
-                elif layer.name == "base":  # Базовий шар
+                elif layer.name == "base":
                     self._load_layer_tiles(layer, self.base_group)
                 elif layer.name == 'decore':
                     self._load_layer_tiles(layer, self.decore_group, inflate_amount=(-5, -5))
@@ -118,6 +121,8 @@ class Level:
                     self._load_layer_tiles(layer, self.flower_group)
                 elif layer.name == 'apple':
                     self._load_layer_tiles(layer, self.apple_group)
+                elif layer.name == "swamp":
+                    self._load_layer_tiles(layer, self.swamp_group)
 
     def _load_layer_tiles(self, layer, group, inflate_amount=(0, 0)):
         """Завантаження тайлів із заданого шару в певну групу."""
@@ -215,6 +220,12 @@ class Level:
         else:
             player.increase_cold(delta_time)
 
+        if pg.sprite.spritecollide(player, self.swamp_group, False, pg.sprite.collide_rect):
+            player.speed = player.base_speed * 0.5  # Зменшуємо швидкість (наприклад, вдвічі)
+            print("[Debug] Гравець на болоті – швидкість зменшена.")
+        else:
+            player.speed = player.base_speed
+
     def check_brevno_pickup(self, player):
         """Перевіряє зіткнення гравця з бревнами."""
         for brevno in list(self.brevno_group):
@@ -275,7 +286,7 @@ class Level:
                 self.screen.blit(zoomed_image, zoomed_pos.topleft)
 
         # Інші об'єкти: дерева, декор, бревна, вогонь
-        for group in [self.decore_group, self.flower_group, self.tree_group, self.brevno_group, self.fire_group]:
+        for group in [self.swamp_group,self.decore_group, self.flower_group, self.tree_group, self.brevno_group, self.fire_group,]:
             for obj in group:
                 if obj.rect.colliderect(visible_area):
                     zoomed_pos = self.camera.apply(obj.visual_rect)

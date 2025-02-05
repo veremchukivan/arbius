@@ -5,6 +5,7 @@ class Player(pg.sprite.Sprite):
     def __init__(self, x, y, speed, assets_path,):
         super().__init__()
         self.speed = speed
+        self.base_speed = speed
         self.assets_path = os.path.join(assets_path, "player")
 
         self.animations = self.load_animations()
