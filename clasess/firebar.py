@@ -24,7 +24,7 @@ class Firebar:
 
                     bar_images[percentage] = scaled_image
                 except ValueError:
-                    print(f"Не вдалося визначити відсоток з файлу {filename}")
+                    print(f"Unable to determine percentage from file {filename}")
         return bar_images
 
     def update(self, progress):

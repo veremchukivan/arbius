@@ -1,4 +1,8 @@
+import os
+import sys
+
 import pygame as pg
+
 from clasess.level import Level
 from clasess.player import Player
 from clasess.playerbar import playerbar
@@ -34,7 +38,7 @@ def main_game(screen):
     base_freezing_rate = levels[current_level]["freezing_rate"]
     base_fire_decay_rate = levels[current_level]["fire_decay_rate"]
 
-    minimap = Minimap(level, scale_factor=0.07, position=(0, 0))
+    minimap = Minimap(level, scale_factor=0.07, position=(0,0))
 
 
     while running:
@@ -109,8 +113,7 @@ def main_game(screen):
             strom_bonus = False
 
 
-        print(f'FFbonus{fire.decrease_point}')
-        print(f'PPbonus{player.cold_increase_amount}')
+
 
         # Оновлення стану гри
         in_lighting_zone = level.is_player_in_lighting_zone(player)
@@ -137,9 +140,7 @@ def main_game(screen):
         pg.display.flip()
 
 def apply_level_changes(level, player, level_data, current_level):
-    print(f"Застосовуємо параметри для рівня {current_level}: {level_data}")
     for fire in level.fire_group:
-        print(f"До зміни: fire.decrease_point={fire.decrease_point}, fire.lighting_radius={fire.lighting_radius}")
         fire.progress = 100  # Скидаємо прогрес костра
         fire.decrease_point = level_data["fire_decay_rate"]  # Встановлюємо новий темп згасання
         fire.lighting_radius = max(70, fire.lighting_radius - (current_level * 50))  # Зменшуємо радіус освітлення
@@ -148,15 +149,14 @@ def apply_level_changes(level, player, level_data, current_level):
 
     player.cold_progress = 0  # Скидаємо рівень холоду
     player.cold_increase_amount = level_data["freezing_rate"]  # Встановлюємо новий темп замерзання
-    print(f"Player cold_increase_amount встановлено на {player.cold_increase_amount}")
 
 
 
 def show_death_screen(screen):
     """Показує екран смерті, коли гравець замерзає."""
     font = pg.font.Font(None, 74)
-    message = "Ви замерзли..."
-    instructions = "Натисніть Enter, щоб вийти"
+    message = "Arbius is frozen..."
+    instructions = "Press Enter to exit"
 
     screen.fill((0, 0, 0))
     text = font.render(message, True, (255, 0, 0))  # Червоний текст
@@ -177,31 +177,68 @@ def show_death_screen(screen):
                 waiting = False
 
 
+
 def show_victory_screen(screen):
-    """Показує екран перемоги, якщо гравець пережив усі 3 ночі."""
+    """Показує екран перемоги з анімацією кадрів від 0 до 15."""
+    clock = pg.time.Clock()
+    running = True
+
+    win_frames = []
+    win_path = os.path.join("assets", "win")
+    for i in range(16):
+        frame_path = os.path.join(win_path, f"{i}.png")
+        try:
+            frame = pg.image.load(frame_path).convert_alpha()
+            win_frames.append(frame)
+        except Exception as e:
+            print(f"Не вдалося завантажити {frame_path}: {e}")
+
+    if not win_frames:
+        raise ValueError("Не знайдено зображень у папці assets/win!")
+
+    # Налаштування текстових повідомлень
     font = pg.font.Font(None, 74)
-    message = "Ви вижили! Вітаємо!"
-    instructions = "Натисніть Enter, щоб вийти"
+    message = font.render("Ви вижили! Вітаємо!", True, (0, 255, 0))
+    instructions = font.render("Натисніть Enter, щоб вийти", True, (200, 200, 200))
 
-    screen.fill((0, 0, 0))
-    text = font.render(message, True, (0, 255, 0))  # Зелений текст (перемога)
-    sub_text = font.render(instructions, True, (200, 200, 200))
+    # Налаштування анімації
+    frame_index = 0
+    last_frame_time = pg.time.get_ticks()
+    frame_delay = 300
 
-    screen.blit(text, (screen.get_width() // 2 - text.get_width() // 2, screen.get_height() // 2 - 100))
-    screen.blit(sub_text, (screen.get_width() // 2 - sub_text.get_width() // 2, screen.get_height() // 2))
-
-    pg.display.flip()
-
-    waiting = True
-    while waiting:
+    while running:
+        # Обробка подій
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-                exit()
+                sys.exit()
             elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
-                waiting = False  # Виходимо з циклу
-                pg.quit()  # Закриваємо гру
-                exit()
+                running = False
+
+        # Оновлення кадра згідно з часом
+        current_time = pg.time.get_ticks()
+        if current_time - last_frame_time >= frame_delay:
+            frame_index = (frame_index + 1) % len(win_frames)
+            last_frame_time = current_time
+
+        # Масштабування поточного кадру під розмір екрану
+        current_frame = win_frames[frame_index]
+        current_frame_scaled = pg.transform.scale(current_frame, (screen.get_width(), screen.get_height()))
+
+        # Відображення кадру та тексту
+        screen.fill((0, 0, 0))
+        screen.blit(current_frame_scaled, (0, 0))
+        text_rect = message.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 100))
+        instructions_rect = instructions.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+        screen.blit(message, text_rect)
+        screen.blit(instructions, instructions_rect)
+
+        pg.display.update()
+        clock.tick(60)
+
+    pg.quit()
+    sys.exit()
+
 
 
 def draw_level_timer(screen, level_timer, level_duration):
@@ -213,47 +250,86 @@ def draw_level_timer(screen, level_timer, level_duration):
     screen.blit(timer_text, text_rect)
 
 
-def show_level_transition(screen, level_number):
+def show_level_transition(screen,level_number):
     """Показує заставку перед початком нового рівня."""
+    clock = pg.time.Clock()
+
+    black_screen = pg.Surface(screen.get_size())
+    black_screen.fill((0, 0, 0))
+
+    # Створюємо шрифт і повідомлення
     font = pg.font.Font(None, 74)
-    message = f"Ніч {level_number} пройдено! Вітаємо!"
-    instructions = "Натисніть Enter для продовження..."
+    message1 = font.render("The night is over!", True, (255, 255, 255))
+    message2 = font.render("Arbius sleeps all day long", True, (255, 255, 255))
 
-    screen.fill((0, 0, 0))
-    text = font.render(message, True, (255, 255, 255))
-    sub_text = font.render(instructions, True, (200, 200, 200))
+    # Центруємо повідомлення
+    message1_rect = message1.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 40))
+    message2_rect = message2.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 + 40))
 
-    screen.blit(text, (screen.get_width() // 2 - text.get_width() // 2, screen.get_height() // 2 - 100))
-    screen.blit(sub_text, (screen.get_width() // 2 - sub_text.get_width() // 2, screen.get_height() // 2))
+    # Малюємо повідомлення на чорному екрані
+    black_screen.blit(message1, message1_rect)
+    black_screen.blit(message2, message2_rect)
 
+    screen.blit(black_screen, (0, 0))
     pg.display.flip()
 
-    waiting = True
-    while waiting:
+    start_ticks = pg.time.get_ticks()
+    while (pg.time.get_ticks() - start_ticks) < 3000:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-                exit()
-            elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+
+        clock.tick(60)
+
+    #Завантаження зображень для анімації заставки з папки assets/sleepy
+    sleepy_frames = []
+    sleepy_path = os.path.join("assets", "sleepy")
+    for filename in sorted(os.listdir(sleepy_path)):
+        if filename.endswith(".png"):
+            image_path = os.path.join(sleepy_path, filename)
+            image = pg.image.load(image_path).convert_alpha()
+            sleepy_frames.append(image)
+
+    if not sleepy_frames:
+        raise ValueError("not found")
+
+    # 3. Анімація заставки до натискання Enter
+    frame_index = 0
+    frame_timer = 0.0
+    animation_speed = 0.5  # Час у секундах на один кадр
+
+    waiting = True
+    while waiting:
+        delta_time = clock.tick(60) / 1000.0  # Час, що минув з останнього кадру
+        frame_timer += delta_time
+        if frame_timer >= animation_speed:
+            frame_timer = 0.0
+            frame_index = (frame_index + 1) % len(sleepy_frames)
+
+        # Масштабуємо поточний кадр заставки до розміру екрану
+        current_frame = sleepy_frames[frame_index]
+        current_frame_scaled = pg.transform.scale(current_frame, (screen.get_width(), screen.get_height()))
+        screen.blit(current_frame_scaled, (0, 0))
+        pg.display.flip()
+
+        # Обробка подій
+        for event in pg.event.get():
+            if event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
                 waiting = False
+                break
 
 
 
-# Головна функція
-def main():
-    pg.init()
-    screen = pg.display.set_mode((1800, 1080))
-    pg.display.set_caption("Arbius-fire at night")
+pg.init()
+screen = pg.display.set_mode((1800, 1080))
+pg.display.set_caption("Arbius-fire at night")
 
-    # Запускаємо стартове меню
-    start_menu = StartMenu(screen)
-    start_menu.handle_events()
+# Запускаємо стартове меню
+start_menu = StartMenu(screen)
+start_menu.handle_events()
 
-    # Після виходу зі стартового меню запускається гра
-    main_game(screen)
+# Після виходу зі стартового меню запускається гра
+main_game(screen)
 
-    pg.quit()
+pg.quit()
 
-
-if __name__ == "__main__":
-    main()

@@ -44,12 +44,10 @@ class Fire(pg.sprite.Sprite):
         self.mask = pg.mask.from_surface(self.image)
 
         # Оновлюємо прогрес-бар відповідно до початкового стану
-        self.progress_bar.update(self.progress)
+        # self.progress_bar.update(self.progress)
 
         self.lighting_surface = self.create_lighting_surface()
 
-        # Додаємо лог для перевірки
-        print(f"Костер створений: pos={pos}, level={current_level}, lighting_radius={self.lighting_radius}")
 
 
     def create_lighting_surface(self):
@@ -101,7 +99,7 @@ class Fire(pg.sprite.Sprite):
                     )
                 frames.append(frame_image)
         if not frames:
-            raise ValueError(f"Не знайдено жодного кадру анімації в папці {self.assets_path}")
+            raise ValueError(f"No animation frames found in {self.assets_path}")
         return frames
 
     def load_static_image(self):

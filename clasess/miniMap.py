@@ -17,7 +17,7 @@ class Minimap:
         minimap.fill((50, 50, 50))  # Заповнюємо фон, можна змінити колір за потребою
 
 
-        for sprite in self.level.base_group:
+        for sprite in self.level.minimapG:
             # Масштабуємо зображення плитки
             mini_tile = pg.transform.scale(
                 sprite.image,

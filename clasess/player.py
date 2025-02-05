@@ -56,7 +56,7 @@ class Player(pg.sprite.Sprite):
                 frame_path = os.path.join(path, f"{i}.png")
                 if os.path.exists(frame_path):
                     frame = pg.image.load(frame_path).convert_alpha()
-                    frames.append(frame)  # Не масштабуємо тут
+                    frames.append(frame)
                 else:
                     print(f"Файл {frame_path} не знайдено!")
             animations[direction] = frames
@@ -72,7 +72,7 @@ class Player(pg.sprite.Sprite):
                     bar_image = pg.image.load(os.path.join(bars_path, filename)).convert_alpha()
                     bar_images[percentage] = bar_image
                 except ValueError:
-                    print(f"Не вдалося визначити відсоток з файлу {filename}")
+                    print(f"Unable to determine percentage from file {filename}")
         return bar_images
 
     def update_animation(self):
@@ -160,15 +160,12 @@ class Player(pg.sprite.Sprite):
             self.cold_progress -= warm_rate * delta_time
             if self.cold_progress < 0:
                 self.cold_progress = 0.0
-            print(f"[Player] cold_progress decreased to {self.cold_progress}")
 
     def freeze(self):
-        """Замороження гравця."""
         self.is_frozen = True
         print("Гравець замерз!")
 
     def draw(self, surface, camera, hud):
-        """Малювання персонажа та його прогрес-бару."""
         if not self.is_frozen:
             # Отримати центр rect у екранних координатах
             screen_center = camera.apply_point(self.rect.center)
