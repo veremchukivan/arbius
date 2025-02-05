@@ -11,6 +11,11 @@ from clasess.pauseMenu import PauseMenu
 from clasess.storm import Storm
 from clasess.miniMap  import Minimap
 
+import os
+import sys
+import pygame as pg
+# Інші необхідні імпорти (наприклад, класи Level, Player, playerbar, PauseMenu, Storm, Minimap)
+
 def main_game(screen):
     current_level = 0
     level = Level("map/map.tmx", screen, current_level)
@@ -21,8 +26,18 @@ def main_game(screen):
     storm = Storm(assets_path="assets", screen=screen)
     clock = pg.time.Clock()
 
+    # Відтворення фонового музичного супроводу гри (основна музика)
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    game_music_path = os.path.join(base_path, "assets", "music", "game_beck_m.ogg")
+    try:
+        pg.mixer.music.load(game_music_path)
+        pg.mixer.music.set_volume(0.1)  # Налаштування гучності (від 0.0 до 1.0)
+        pg.mixer.music.play(-1)         # Відтворення у циклі
+    except pg.error as e:
+        print("Помилка відтворення музики гри:", e)
+
     storm_timer = 0
-    strom_bonus=False
+    strom_bonus = False
 
     # Рівні гри
     levels = [
@@ -38,8 +53,7 @@ def main_game(screen):
     base_freezing_rate = levels[current_level]["freezing_rate"]
     base_fire_decay_rate = levels[current_level]["fire_decay_rate"]
 
-    minimap = Minimap(level, scale_factor=0.07, position=(0,0))
-
+    minimap = Minimap(level, scale_factor=0.07, position=(0, 0))
 
     while running:
         delta_time = clock.tick(60) / 1000.0
@@ -62,7 +76,15 @@ def main_game(screen):
                     paused = True
                 elif event.key == pg.K_TAB:
                     if current_level < len(levels) - 1:
+                        # Завантажуємо заставку переходу рівня
                         show_level_transition(screen, current_level + 1)
+                        # Після завершення заставки повертаємо основну музику
+                        try:
+                            pg.mixer.music.load(game_music_path)
+                            pg.mixer.music.set_volume(0.1)
+                            pg.mixer.music.play(-1)
+                        except pg.error as e:
+                            print("Помилка відтворення музики гри:", e)
                         current_level += 1
                         level_timer = 0
                         apply_level_changes(level, player, levels[current_level], current_level)
@@ -89,7 +111,7 @@ def main_game(screen):
             pause_menu.display_menu()
             pg.display.flip()
 
-        if not storm.is_active and storm_timer >=15 :  # Перевіряємо кожні 15 секунд
+        if not storm.is_active and storm_timer >= 15:  # Перевіряємо кожні 15 секунд
             storm_timer = 0
             storm.try_start()
         storm.update(delta_time)
@@ -99,26 +121,20 @@ def main_game(screen):
             fire_decay_rate = storm.get_fire_decay_rate()
             freezing_rate = storm.get_player_freezing_rate()
 
-            # Прискорене зменшення прогресу костра
-            if  strom_bonus == False:
+            if not strom_bonus:
                 for fire in level.fire_group:
                     fire.decrease_point = base_fire_decay_rate + fire_decay_rate
                 player.cold_increase_amount = base_freezing_rate + freezing_rate
                 strom_bonus = True
         else:
-            # Скидання бонусів після завершення шторму
             for fire in level.fire_group:
-                fire.decrease_point = base_fire_decay_rate  # Повертаємо до звичайного зменшення
-            player.cold_increase_amount = base_freezing_rate  # Скидаємо замерзання
+                fire.decrease_point = base_fire_decay_rate
+            player.cold_increase_amount = base_freezing_rate
             strom_bonus = False
-
-
-
 
         # Оновлення стану гри
         in_lighting_zone = level.is_player_in_lighting_zone(player)
         player.update(level.map_width, level.map_height, delta_time, in_lighting_zone)
-
         level.handle_collisions(player)
         level.update(player, delta_time)
         bar.update(player.cold_progress)
@@ -131,13 +147,15 @@ def main_game(screen):
         if storm.is_active:
             storm.draw()
 
-        # Відображення таймера рівня (перевіряємо, чи рівень ще існує)
         if current_level < len(levels):
             draw_level_timer(screen, level_timer, levels[current_level]["duration"])
 
-
         minimap.draw(screen, player)
         pg.display.flip()
+
+    pg.mixer.music.stop()
+
+
 
 def apply_level_changes(level, player, level_data, current_level):
     for fire in level.fire_group:
@@ -151,28 +169,40 @@ def apply_level_changes(level, player, level_data, current_level):
     player.cold_increase_amount = level_data["freezing_rate"]  # Встановлюємо новий темп замерзання
 
 
-
 def show_death_screen(screen):
-    """Показує екран смерті, коли гравець замерзає."""
+    """Показує екран смерті, коли гравець замерзає, та відтворює відповідну музику."""
+    # Формування абсолютного шляху до музичного файлу death.ogg
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    death_music_path = os.path.join(base_path, "assets", "music", "death.ogg")
+
+    # Завантаження та відтворення музики для екрану смерті
+    try:
+        pg.mixer.music.load(death_music_path)
+        pg.mixer.music.set_volume(0.1)  # Гучність від 0.0 до 1.0
+        pg.mixer.music.play(loops=0)  # Відтворення лише один раз (без циклу)
+    except pg.error as e:
+        print("Помилка відтворення музики:", e)
+
+    # Налаштування текстових повідомлень
     font = pg.font.Font(None, 74)
     message = "Arbius is frozen..."
     instructions = "Press Enter to exit"
 
+    # Відображення екрану смерті
     screen.fill((0, 0, 0))
     text = font.render(message, True, (255, 0, 0))  # Червоний текст
     sub_text = font.render(instructions, True, (200, 200, 200))
-
     screen.blit(text, (screen.get_width() // 2 - text.get_width() // 2, screen.get_height() // 2 - 100))
     screen.blit(sub_text, (screen.get_width() // 2 - sub_text.get_width() // 2, screen.get_height() // 2))
-
     pg.display.flip()
 
+    # Очікування, поки користувач не натисне Enter
     waiting = True
     while waiting:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-                exit()
+                sys.exit()
             elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
                 waiting = False
 
@@ -185,6 +215,16 @@ def show_victory_screen(screen):
 
     win_frames = []
     win_path = os.path.join("assets", "win")
+
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    game_music_path = os.path.join(base_path, "assets", "music", "win.ogg")
+    try:
+        pg.mixer.music.load(game_music_path)
+        pg.mixer.music.set_volume(0.1)  # Налаштування гучності (від 0.0 до 1.0)
+        pg.mixer.music.play(-1)  # -1 означає безкінечне повторення
+    except pg.error as e:
+        print("Помилка відтворення музики гри:", e)
+
     for i in range(16):
         frame_path = os.path.join(win_path, f"{i}.png")
         try:
@@ -198,8 +238,8 @@ def show_victory_screen(screen):
 
     # Налаштування текстових повідомлень
     font = pg.font.Font(None, 74)
-    message = font.render("Ви вижили! Вітаємо!", True, (0, 255, 0))
-    instructions = font.render("Натисніть Enter, щоб вийти", True, (200, 200, 200))
+    message = font.render("Arbius survived! Congratulations!", True, (0, 255, 0))
+    instructions = font.render("Press Enter to exit", True, (200, 200, 200))
 
     # Налаштування анімації
     frame_index = 0
@@ -256,6 +296,16 @@ def show_level_transition(screen,level_number):
 
     black_screen = pg.Surface(screen.get_size())
     black_screen.fill((0, 0, 0))
+
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    game_music_path = os.path.join(base_path, "assets", "music", "level_complate.ogg")
+    try:
+        pg.mixer.music.load(game_music_path)
+        pg.mixer.music.set_volume(0.1)  # Налаштування гучності (від 0.0 до 1.0)
+        pg.mixer.music.play(-1)  # -1 означає безкінечне повторення
+    except pg.error as e:
+        print("Помилка відтворення музики гри:", e)
+
 
     # Створюємо шрифт і повідомлення
     font = pg.font.Font(None, 74)
