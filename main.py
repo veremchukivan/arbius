@@ -5,6 +5,7 @@ from clasess.playerbar import playerbar
 from clasess.startMenu import StartMenu
 from clasess.pauseMenu import PauseMenu
 from clasess.storm import Storm
+from clasess.miniMap  import Minimap
 
 def main_game(screen):
     current_level = 0
@@ -33,10 +34,11 @@ def main_game(screen):
     base_freezing_rate = levels[current_level]["freezing_rate"]
     base_fire_decay_rate = levels[current_level]["fire_decay_rate"]
 
+    minimap = Minimap(level, scale_factor=0.07, position=(0, 0))
 
 
     while running:
-        delta_time = clock.tick(60) / 1000.0  # Час, що пройшов з останнього кадру (у секундах)
+        delta_time = clock.tick(60) / 1000.0
         level_timer += delta_time
         storm_timer += delta_time
 
@@ -130,6 +132,8 @@ def main_game(screen):
         if current_level < len(levels):
             draw_level_timer(screen, level_timer, levels[current_level]["duration"])
 
+
+        minimap.draw(screen, player)
         pg.display.flip()
 
 def apply_level_changes(level, player, level_data, current_level):
@@ -172,6 +176,7 @@ def show_death_screen(screen):
             elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
                 waiting = False
 
+
 def show_victory_screen(screen):
     """Показує екран перемоги, якщо гравець пережив усі 3 ночі."""
     font = pg.font.Font(None, 74)
@@ -208,7 +213,6 @@ def draw_level_timer(screen, level_timer, level_duration):
     screen.blit(timer_text, text_rect)
 
 
-
 def show_level_transition(screen, level_number):
     """Показує заставку перед початком нового рівня."""
     font = pg.font.Font(None, 74)
@@ -233,10 +237,12 @@ def show_level_transition(screen, level_number):
             elif event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
                 waiting = False
 
+
+
 # Головна функція
 def main():
     pg.init()
-    screen = pg.display.set_mode((1280, 720))
+    screen = pg.display.set_mode((1800, 1080))
     pg.display.set_caption("Arbius-fire at night")
 
     # Запускаємо стартове меню

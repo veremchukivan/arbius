@@ -267,6 +267,18 @@ class Level:
         player.rect.centery = max(player.rect.height // 2,
                                   min(player.rect.centery, self.map_height - player.rect.height // 2))
 
+    def draw_fire_progress_bar(self):
+        # Беремо перший активний костер
+        for fire in self.fire_group:
+            if fire.progress > 0:  # Якщо костер активний
+                if fire.progress_bar.current_bar_image:
+                    bar_image = fire.progress_bar.current_bar_image
+                    bar_x = self.screen.get_width() // 2 - bar_image.get_width() // 2
+                    bar_y = 10  # Відстань від верхнього краю
+                    self.screen.blit(bar_image, (bar_x, bar_y))
+                break
+
+
     def render(self, player):
         """Відображаємо об'єкти, які видно у вікні камери, та прогрес-бар костра."""
         visible_area = self.camera.get_visible_area()
@@ -305,13 +317,4 @@ class Level:
         # Відображення прогрес-бару активного костра у верхній частині екрану
         self.draw_fire_progress_bar()
 
-    def draw_fire_progress_bar(self):
-        # Беремо перший активний костер
-        for fire in self.fire_group:
-            if fire.progress > 0:  # Якщо костер активний
-                if fire.progress_bar.current_bar_image:
-                    bar_image = fire.progress_bar.current_bar_image
-                    bar_x = self.screen.get_width() // 2 - bar_image.get_width() // 2
-                    bar_y = 10  # Відстань від верхнього краю
-                    self.screen.blit(bar_image, (bar_x, bar_y))
-                break
+
