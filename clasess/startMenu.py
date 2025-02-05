@@ -13,9 +13,9 @@ class StartMenu:
         play_button = self.font.render("Почати гру", True, (255, 255, 255))
         exit_button = self.font.render("Вийти", True, (255, 255, 255))
 
-        title_rect = title.get_rect(center=(640, 200))
-        play_button_rect = play_button.get_rect(center=(640, 300))
-        exit_button_rect = exit_button.get_rect(center=(640, 400))
+        title_rect = title.get_rect(center=(self.screen.get_width() /2 , self.screen.get_height() / 2 - 100))
+        play_button_rect = play_button.get_rect(center=(self.screen.get_width() /2 , self.screen.get_height() / 2 ))
+        exit_button_rect = exit_button.get_rect(center=(self.screen.get_width() /2 , self.screen.get_height() / 2 + 100))
 
         self.screen.blit(title, title_rect)
         self.screen.blit(play_button, play_button_rect)
