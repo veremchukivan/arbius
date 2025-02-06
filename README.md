@@ -5,7 +5,7 @@ This repository contains the implementation of the project from the course **Obj
 
 **Author**: *Ivan Veremchuk
 
-**Project theme: Darkness and Light.
+**Project theme**: Darkness and Light.
 
 ---
 
