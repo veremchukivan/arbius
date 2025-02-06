@@ -23,8 +23,13 @@ The player has the following tasks:
 - **Dynamic Events**: Storms and other random events change the game conditions, affecting the speed at which the hero freezes and the reduction of the campfire.
 - **Swamp Mechanic**: When the hero enters a swamp, his speed decreases significantly, making movement difficult and requiring careful route planning.
 
----
+### **1.3 Vývojový softvér**
+- **Pygame-CE**: zvolený programovací jazyk.
+- **PyCharm 2024.1**: vybrané IDE.
+- **Tiled 1.10.2**: grafický nástroj na vytváranie levelov.
+- **Itch.io**: zdroj grafických assetov a zvukov do hry.
 
+---
 ## **2. Concept**
 
 ### **2.1 Gameplay Overview**
