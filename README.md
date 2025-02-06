@@ -9,7 +9,7 @@ This repository contains the implementation of the project from the course **Obj
 
 ---
 
-## **1. Introduction.
+## **1. Introduction.**
 
 **1.1 Idea and inspiration**.
 
