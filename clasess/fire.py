@@ -44,7 +44,7 @@ class Fire(pg.sprite.Sprite):
         self.mask = pg.mask.from_surface(self.image)
 
         # Оновлюємо прогрес-бар відповідно до початкового стану
-        # self.progress_bar.update(self.progress)
+        self.progress_bar.update(self.progress)
 
         self.lighting_surface = self.create_lighting_surface()
 
