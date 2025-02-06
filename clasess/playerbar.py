@@ -1,5 +1,3 @@
-# clasess/hud.py
-
 import os
 import pygame as pg
 

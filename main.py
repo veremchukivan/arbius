@@ -1,8 +1,3 @@
-import os
-import sys
-
-import pygame as pg
-
 from clasess.level import Level
 from clasess.player import Player
 from clasess.playerbar import playerbar
@@ -14,7 +9,6 @@ from clasess.miniMap  import Minimap
 import os
 import sys
 import pygame as pg
-# Інші необхідні імпорти (наприклад, класи Level, Player, playerbar, PauseMenu, Storm, Minimap)
 
 def main_game(screen):
     current_level = 0
