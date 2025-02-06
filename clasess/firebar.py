@@ -27,6 +27,7 @@ class Firebar:
                     print(f"Unable to determine percentage from file {filename}")
         return bar_images
 
+
     def update(self, progress):
         """Оновлення зображення прогрес-бару."""
         rounded_progress = int(progress // 10) * 10
@@ -35,6 +36,7 @@ class Firebar:
         elif rounded_progress < 0:
             rounded_progress = 0
         self.current_bar_image = self.bar_images.get(rounded_progress, None)
+
 
     def draw(self, surface, position):
         """Малювання прогрес-бару."""

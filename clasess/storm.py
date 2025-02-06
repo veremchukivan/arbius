@@ -30,10 +30,12 @@ class Storm:
             raise ValueError(f"Не знайдено кадрів у папці {folder_path}")
         return frames
 
+
     def try_start(self):
         """Спроба запустити шторм з 45% шансом."""
         if random.random() <= 0.45:
             self.start()
+
 
     def start(self):
         """Початок шторму."""
@@ -46,12 +48,14 @@ class Storm:
         self.player_freezing_bonus = random.randint(2, 4)
         print(f"Шторм почався! Бонуси: Fire - {self.fire_decay_bonus}, Player - {self.player_freezing_bonus}")
 
+
     def stop(self):
         """Зупинка шторму та скидання бонусів."""
         self.is_active = False
         self.fire_decay_bonus = 0  # Скидання бонусу костра
         self.player_freezing_bonus = 0  # Скидання бонусу гравця
         print("Шторм закінчився!")
+
 
     def update(self, delta_time):
         """Оновлення стану шторму."""
@@ -65,6 +69,7 @@ class Storm:
                 self.frame_index += self.animation_speed
                 if self.frame_index >= len(self.frames):
                     self.frame_index = 0
+
 
     def draw(self):
         """Малювання анімації шторму."""

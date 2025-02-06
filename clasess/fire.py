@@ -5,7 +5,7 @@ import os
 from clasess.firebar import Firebar
 
 class Fire(pg.sprite.Sprite):
-    def __init__(self, pos, assets_path, group, current_level=0, scale_factor=1.5, animation_speed=0.1, izona_radius=64, lighting_radius=150):
+    def __init__(self, pos, assets_path, group, scale_factor=1.5, animation_speed=0.1, izona_radius=64, lighting_radius=150):
         super().__init__(group)
         self.scale_factor = scale_factor
         self.assets_path = os.path.join(assets_path, "fire")
@@ -48,8 +48,6 @@ class Fire(pg.sprite.Sprite):
 
         self.lighting_surface = self.create_lighting_surface()
 
-
-
     def create_lighting_surface(self):
         """Створює поверхню для зони освітлення з градієнтом."""
         surface_size = self.lighting_radius * 2
@@ -66,8 +64,6 @@ class Fire(pg.sprite.Sprite):
 
         return surface
 
-
-
     def draw_lighting(self, surface, camera):
         """Малює зону освітлення."""
         if self.is_lighting_active and self.lighting_radius > 0:
@@ -81,8 +77,6 @@ class Fire(pg.sprite.Sprite):
             )
             lighting_rect = scaled_lighting_surface.get_rect(center=screen_center)
             surface.blit(scaled_lighting_surface, lighting_rect.topleft)
-
-
 
     def load_frames(self):
         """Завантаження анімаційних кадрів з папки."""
@@ -163,8 +157,6 @@ class Fire(pg.sprite.Sprite):
 
 
         self.draw_lighting(surface, camera)
-
-
 
     def add_progress(self):
         """Збільшує прогрес бар на основі відстані до костра."""

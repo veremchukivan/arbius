@@ -78,10 +78,10 @@ class Level:
         self.minimapG=pg.sprite.Group()
         self.minimapG.add(*self.water_group,*self.base_group,*self.swamp_group,*self.fire_group)
 
-
     def updatef(self,delta_time):
         for fire in self.fire_group:
             fire.update(delta_time)
+
 
     def load_brevno_points(self):
         """Завантаження об'єктів з name='brevno' з карти із зменшенням кількості бревен з кожним рівнем."""
@@ -115,6 +115,7 @@ class Level:
             sprite = GameSprite((x, y), brevno_image_scaled, self.brevno_group, inflate_amount=(0, 0))
             sprite.is_brevno = True
 
+
     def load_tiles(self):
         """Завантаження тайлів із шарів карти у відповідному порядку."""
         for layer in self.tmx_data.visible_layers:
@@ -132,6 +133,7 @@ class Level:
                 elif layer.name == "swamp":
                     self._load_layer_tiles(layer, self.swamp_group)
 
+
     def _load_layer_tiles(self, layer, group, inflate_amount=(0, 0)):
         """Завантаження тайлів із заданого шару в певну групу."""
         for x, y, gid in layer:
@@ -139,6 +141,7 @@ class Level:
             if tile_image:
                 pos = (x * self.tmx_data.tilewidth, y * self.tmx_data.tileheight)
                 GameSprite(pos, tile_image, group, inflate_amount=inflate_amount)
+
 
     def load_trees(self):
         """Завантаження тайлів дерева із шару."""
@@ -156,6 +159,7 @@ class Level:
                             GameSprite(pos, tile_image, self.tree_group,
                                        inflate_amount=(-5, -5))
 
+
     def load_fire(self, current_level):
         """Завантаження об'єктів вогню з міткою 'campf'."""
         for layer in self.tmx_data.objectgroups:
@@ -166,6 +170,7 @@ class Level:
 
                     # Передаємо `current_level` у Fire
                     Fire(pos=(x, y), assets_path=self.assets_path, group=self.fire_group, current_level=current_level)
+
 
     def is_player_near_fire(self, player):
         """Знаходить костер, до якого гравець може взаємодіяти."""
@@ -185,6 +190,7 @@ class Level:
         else:
             return None
 
+
     def is_player_in_lighting_zone(self, player):
         for fire in self.fire_group:
             if fire.is_lighting_active:
@@ -193,6 +199,7 @@ class Level:
                 if distance <= fire.lighting_radius:
                     return True
         return False
+
 
     def handle_log_to_fire(self, player):
         """Обробляє логіку додавання бревна до костра."""
@@ -234,6 +241,7 @@ class Level:
         else:
             player.speed = player.base_speed
 
+
     def check_brevno_pickup(self, player):
         """Перевіряє зіткнення гравця з бревнами."""
 
@@ -254,6 +262,7 @@ class Level:
                     player.count_wood += 1
                 else:
                     self.collision_group.add(*self.brevno_group)
+
 
     def handle_collisions(self, player):
         # Рух по осі X
@@ -280,6 +289,7 @@ class Level:
         player.rect.centery = max(player.rect.height // 2,
                                   min(player.rect.centery, self.map_height - player.rect.height // 2))
 
+
     def draw_fire_progress_bar(self):
         # Беремо перший активний костер
         for fire in self.fire_group:
@@ -290,8 +300,6 @@ class Level:
                     bar_y = 10  # Відстань від верхнього краю
                     self.screen.blit(bar_image, (bar_x, bar_y))
                 break
-
-
 
 
     def render(self, player):

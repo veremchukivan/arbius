@@ -12,7 +12,6 @@ class Camera:
 
         self.camera_rect = pygame.Rect(0, 0, screen_width // zoom, screen_height // zoom)
 
-
     def update(self, target_rect):
         # Центруємо камеру на гравці
         self.x = target_rect.centerx - (self.width // (2 * self.zoom))
@@ -37,7 +36,6 @@ class Camera:
             (point[0] - self.x) * self.zoom,
             (point[1] - self.y) * self.zoom,
         )
-
 
     def scale_surface(self, surface):
         """Масштабує спрайт відповідно до камери."""
