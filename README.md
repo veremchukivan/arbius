@@ -15,7 +15,7 @@ This repository contains the implementation of the project from the course **Obj
 
 **The Arbius - Fire at Night project was created as a final project in the subject of Object Technologies. The main idea is to survive in a nighttime, gloomy world where the cold and harsh environment force the hero to constantly move forward, gathering limited resources to keep the fire burning. Inspired by classic works of darkness and light, as well as indie games where atmosphere and precise interaction with the environment are key aspects.
 
-### 1.2 Game Overview**.
+### **1.2 Game Overview**.
 
 The player is faced with the following tasks:
 - **Survive the night**: Survive a long, cold night.
@@ -24,7 +24,7 @@ The player is faced with the following tasks:
 - **Dynamic events**: Storms and other random events change the conditions of the game, affecting the speed of freezing of the hero and the reduction of the fire.
 - **Swamp mechanics**: When the hero enters the swamp, his speed is significantly reduced, making it difficult to move and requiring careful route planning.
 
-### 1.3 Voice Software**.
+## **1.3 Voice Software**.
 - **Pygame-CE**: free software language.
 - **PyCharm 2024.1**: IDE released.
 - **Tiled 1.10.2**: graphical level designer for displaying levels.
