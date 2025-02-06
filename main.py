@@ -168,6 +168,9 @@ def apply_level_changes(level, player, level_data, current_level):
     player.cold_progress = 0  # Скидаємо рівень холоду
     player.cold_increase_amount = level_data["freezing_rate"]  # Встановлюємо новий темп замерзання
 
+    level.brevno_group.empty()
+    level.load_brevno_points()
+
 
 def show_death_screen(screen):
     """Показує екран смерті, коли гравець замерзає, та відтворює відповідну музику."""
