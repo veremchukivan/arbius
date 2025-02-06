@@ -1,5 +1,5 @@
 # **ARBIUS – Fire at Night**
-*Game Design Document*
+*Game Design Document - EN*
 
 This repository contains the implementation of the project for the course **Object Technologies** – the game **Arbius – Fire at Night**. In the game, the player controls a hero who must survive on an uninhabited island, fight the cold and other dangers, collect firewood to light a fire and overcome obstacles. The game combines elements of strategic planning, dynamic events and retro-atmospheric graphics.
 
@@ -57,7 +57,6 @@ The game explores the struggle between light and darkness:
 
 ---
 
-## **3. Art**
 
 ## **3. Art**
 
@@ -65,19 +64,23 @@ The game explores the struggle between light and darkness:
 The game aims to be visually appealing with carefully selected assets that emphasize the contrast between light and darkness. Using assets from itch.io, assets were selected for the protagonist and environmental elements that convey the atmosphere of gloom, cold night and the struggle for survival. The protagonist symbolizes warmth and hope, while the dark, harsh environment reflects the dangers and trials he faces.
 
 <p align="center">
-  <img src="" alt="Концепт героя" width="300">
+  <img src="./assets/player/down/0.png" alt="Концепт героя" width="300">
   <br>
   <em>Hero Concept Preview</em>
 </p>
 
-### **3.2 Дизайн**
+### **3.2 Design.**
+
+Ako hlavný asset pre prostredie bol použitý platený balík:  
+🔗 [sprout-lands-asset-pack](https://cupnooble.itch.io/sprout-lands-asset-pack).
+
 The game uses assets that match the theme of medieval fantasy and survival. Resources from itch.io, in particular pixel art sets, help create a unique environment on an uninhabited island. The main focus is on the following elements:
 - **Background tiles**: The map is created in the Tiled editor and contains several layers that form the basis of the world (water, base, swamp, decor).
 - **Level objects**: Additional elements (logs, stones, trees) are adapted to create a gloomy but detailed atmosphere.
 - **Decorative elements**: Carefully selected objects that not only decorate the level, but also perform a functional role (for example, create obstacles or contribute to the correct operation of the collision system).
 
 <p align="center">
-  <img src="" alt="Дизайн рівня" width="800">
+  <img src="./map/map.png" alt="Дизайн рівня" width="800">
   <br>
   <em>Level design concept</em>
 </p>
@@ -101,12 +104,8 @@ Each stage of the game has music that matches the atmosphere:
 - **Level Transitions & Victory Screen**: Specially selected music to enhance emotional moments.
 - **Death Screen**: Dramatic soundtracks that signal failure and the importance of timely action.
 
-### **4.2 Sound Effects**
-
-Sound effects include:
-- **Interaction Effects**: Sounds of picking up logs, footsteps, and other actions.
-- **Ambient Sounds**: The crackling of fire, the rustling of the wind, the noise of the swamp – all this creates immersion in the game world.
-
+Zdrojom hudby pre úrovne, úvodnú obrazovku, prechodové obrazovky, cutscénu a obrazovku Game Over bol zvukový balík:  
+🔗 [instagram music](https://www.instagram.com/).
 ---
 
 ## **5. Gameplay and Interface**
