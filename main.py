@@ -13,7 +13,7 @@ import pygame as pg
 def main_game(screen):
     current_level = 0
     level = Level("map/map.tmx", screen, current_level)
-    player = Player(x=1700, y=2300, speed=4, assets_path="assets")
+    player = Player(x=3100, y=2700, speed=4, assets_path="assets")
     bar = playerbar(assets_path="assets", screen=screen)
 
     pause_menu = PauseMenu(screen)
