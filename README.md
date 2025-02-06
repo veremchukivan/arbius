@@ -64,14 +64,14 @@ The game explores the struggle between light and darkness:
 The game aims to be visually appealing with carefully selected assets that emphasize the contrast between light and darkness. Using assets from itch.io, assets were selected for the protagonist and environmental elements that convey the atmosphere of gloom, cold night and the struggle for survival. The protagonist symbolizes warmth and hope, while the dark, harsh environment reflects the dangers and trials he faces.
 
 <p align="center">
-  <img src="./assets/player/down/0.png" alt="Концепт героя" width="300">
-  <br>
-  <em>Hero Concept Preview</em>
+<img src="./assets/player/down/0.png" alt="Концепт героя" width="300">
+<br>
+<em>Hero Concept Preview</em>
 </p>
 
 ### **3.2 Design.**
 
-Ako hlavný asset pre prostredie bol použitý platený balík:  
+Ako hlavný asset pre prostredie bol použitý platený balík:
 🔗 [sprout-lands-asset-pack](https://cupnooble.itch.io/sprout-lands-asset-pack).
 
 The game uses assets that match the theme of medieval fantasy and survival. Resources from itch.io, in particular pixel art sets, help create a unique environment on an uninhabited island. The main focus is on the following elements:
@@ -80,9 +80,9 @@ The game uses assets that match the theme of medieval fantasy and survival. Reso
 - **Decorative elements**: Carefully selected objects that not only decorate the level, but also perform a functional role (for example, create obstacles or contribute to the correct operation of the collision system).
 
 <p align="center">
-  <img src="./map/map.png" alt="Дизайн рівня" width="800">
-  <br>
-  <em>Level design concept</em>
+<img src="./map/map.png" alt="Дизайн рівня" width="800">
+<br>
+<em>Level design concept</em>
 </p>
 
 
@@ -104,22 +104,14 @@ Each stage of the game has music that matches the atmosphere:
 - **Level Transitions & Victory Screen**: Specially selected music to enhance emotional moments.
 - **Death Screen**: Dramatic soundtracks that signal failure and the importance of timely action.
 
-Zdrojom hudby pre úrovne, úvodnú obrazovku, prechodové obrazovky, cutscénu a obrazovku Game Over bol zvukový balík:  
+Zdrojom hudby pre úrovne, úvodnú obrazovku, prechodové obrazovky, cutscénu a obrazovku Game Over bol zvukový balík:
 🔗 [instagram music](https://www.instagram.com/).
 ---
 
 ## **5. Gameplay and Interface**
 
-### **5.1 Gameplay**
 
-The player must:
-- **Survive the Night**: Survive a long, cold night.
-- **Gather Resources**: Gather logs to build a campfire; the number of logs available decreases with each level, creating an additional challenge.
-- **Fight the Cold**: The cold increases throughout the level, so the hero must maintain a campfire or seek out areas of light to avoid freezing.
-- **Dynamic Events**: Storms and other random events change the game conditions, affecting the hero's freezing rate and the effectiveness of the campfire.
-- **Swamp Mechanic**: When entering a swamp, the hero's movement speed is significantly reduced, making movement difficult and requiring careful route planning.
-
-### **5.2 User Interface**
+### **5.1 User Interface**
 
 The game interface includes:
 - **Animated Main Menu**: A start menu with interactive animation and the ability to start the game by pressing the Enter key.
@@ -128,7 +120,7 @@ The game interface includes:
 - **Corruption/Cold Bar** – shows the level of cold that is bringing the hero closer to freezing.
 - **Minimap**: Shows the hero's position on the map, the location of key objects (e.g. firewood) and helps navigate the large game world.
 
-### **5.3 Controls**
+### **5.2 Controls**
 
 #### **Keyboard:**
 - **A/D** or **Left/Right Arrows** – horizontal movement.
