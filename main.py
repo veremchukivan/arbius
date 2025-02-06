@@ -151,6 +151,7 @@ def main_game(screen):
 
 
 
+
 def apply_level_changes(level, player, level_data, current_level):
     for fire in level.fire_group:
         fire.progress = 100  # Скидаємо прогрес костра

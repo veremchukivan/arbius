@@ -21,17 +21,18 @@ class GameSprite(pg.sprite.Sprite):
         mask_rects = self.mask.get_bounding_rects()
         if mask_rects:
             mask_rect = mask_rects[0]
-            # Зміщення обмежуючого rect до позиції спрайта
+            # Зберігаємо офсет відносно візуального прямокутника
+            self.mask_offset = (mask_rect.left, mask_rect.top)
+            # Коригуємо прямокутник для колізій (але не змінюємо self.visual_rect)
             self.rect = pg.Rect(
                 self.visual_rect.left + mask_rect.left,
                 self.visual_rect.top + mask_rect.top,
                 mask_rect.width,
                 mask_rect.height
             )
+        else:
+            self.mask_offset = (0, 0)
 
-        # Зменшення розміру rect за бажанням
-        if inflate_amount != (0, 0):
-            self.rect = self.rect.inflate(*inflate_amount)
 
 class Level:
     def __init__(self, tmx_file, screen, current_level=0, assets_path="assets"):
@@ -123,7 +124,7 @@ class Level:
                 elif layer.name == "base":
                     self._load_layer_tiles(layer, self.base_group)
                 elif layer.name == 'decore':
-                    self._load_layer_tiles(layer, self.decore_group, inflate_amount=(-5, -5))
+                    self._load_layer_tiles(layer, self.decore_group, inflate_amount=(0, 0))
                 elif layer.name == 'flower':
                     self._load_layer_tiles(layer, self.flower_group)
                 elif layer.name == 'apple':
@@ -235,6 +236,11 @@ class Level:
 
     def check_brevno_pickup(self, player):
         """Перевіряє зіткнення гравця з бревнами."""
+
+        if player.carried_log is not None:
+            self.collision_group.add(*self.brevno_group)
+        else:
+            self.collision_group.remove(*self.brevno_group)
         for brevno in list(self.brevno_group):
             if player.rect.colliderect(brevno.rect):
                 if player.carried_log is None:
@@ -284,6 +290,8 @@ class Level:
                     bar_y = 10  # Відстань від верхнього краю
                     self.screen.blit(bar_image, (bar_x, bar_y))
                 break
+
+
 
 
     def render(self, player):
