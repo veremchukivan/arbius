@@ -1,12 +1,10 @@
-# clasess/level.py
 import random
-
 import pygame as pg
 from pytmx.util_pygame import load_pygame
 import pytmx
 
 from clasess.camera import Camera
-from clasess.fire import Fire  # Імпортуємо клас Fire
+from clasess.fire import Fire
 
 
 class GameSprite(pg.sprite.Sprite):
