@@ -85,7 +85,7 @@ class Level:
             fire.update(delta_time)
 
     def load_brevno_points(self):
-        """Завантаження об'єктів з name='brevno' і випадкове розміщення."""
+        """Завантаження об'єктів з name='brevno' з карти із зменшенням кількості бревен з кожним рівнем."""
         brevno_image = pg.image.load("map/Tilesets/wood.png").convert_alpha()
 
         # Масштабування зображення
@@ -102,15 +102,19 @@ class Level:
                     if getattr(obj, "name", None) == "brevno":
                         brevno_positions.append((int(obj.x), int(obj.y)))
 
-        # Випадковий вибір точок
-        max_brevno_count = 13  # Кількість бревен, які ви хочете згенерувати
-        random_positions = random.sample(brevno_positions, min(len(brevno_positions), max_brevno_count))
+        # Розраховуємо кількість бревен для поточного рівня
+        # Наприклад, з кожним рівнем зменшуємо кількість бревен на 5 (це значення можна налаштувати)
+        reduction = 5
+        total_logs = len(brevno_positions)
+        logs_to_use = max(1, total_logs - self.current_level * reduction)  # Не менше 1-го
+
+        # Випадковий вибір точок із отриманої кількості
+        random_positions = random.sample(brevno_positions, logs_to_use)
 
         # Створюємо спрайти для вибраних точок
         for x, y in random_positions:
-            # Створюємо спрайт у групі бревен з зменшеним rect
             sprite = GameSprite((x, y), brevno_image_scaled, self.brevno_group, inflate_amount=(0, 0))
-            sprite.is_brevno = True  # (опційно)
+            sprite.is_brevno = True
 
     def load_tiles(self):
         """Завантаження тайлів із шарів карти у відповідному порядку."""

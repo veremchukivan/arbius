@@ -15,15 +15,19 @@
 
 <div class="node">
   <a name="main.py"></a>
-  <a target="code" href="///D:/projects/aribius/main.py" type="text/plain"><tt>main.py</tt></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/main.py" type="text/plain"><tt>main.py</tt></a>
 <span class="moduletype">Script</span>  <div class="import">
 imports:
     <a href="#_collections_abc">_collections_abc</a>
  &#8226;   <a href="#_weakrefset">_weakrefset</a>
  &#8226;   <a href="#abc">abc</a>
  &#8226;   <a href="#clasess.level">clasess.level</a>
+ &#8226;   <a href="#clasess.miniMap">clasess.miniMap</a>
+ &#8226;   <a href="#clasess.pauseMenu">clasess.pauseMenu</a>
  &#8226;   <a href="#clasess.player">clasess.player</a>
  &#8226;   <a href="#clasess.playerbar">clasess.playerbar</a>
+ &#8226;   <a href="#clasess.startMenu">clasess.startMenu</a>
+ &#8226;   <a href="#clasess.storm">clasess.storm</a>
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#collections">collections</a>
  &#8226;   <a href="#collections.abc">collections.abc</a>
@@ -178,6 +182,7 @@ imports:
  &#8226;   <a href="#sre_constants">sre_constants</a>
  &#8226;   <a href="#sre_parse">sre_parse</a>
  &#8226;   <a href="#stat">stat</a>
+ &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#traceback">traceback</a>
  &#8226;   <a href="#types">types</a>
  &#8226;   <a href="#warnings">warnings</a>
@@ -9449,9 +9454,14 @@ imported by:
 imported by:
     <a href="#clasess.camera">clasess.camera</a>
  &#8226;   <a href="#clasess.fire">clasess.fire</a>
+ &#8226;   <a href="#clasess.firebar">clasess.firebar</a>
  &#8226;   <a href="#clasess.level">clasess.level</a>
+ &#8226;   <a href="#clasess.miniMap">clasess.miniMap</a>
+ &#8226;   <a href="#clasess.pauseMenu">clasess.pauseMenu</a>
  &#8226;   <a href="#clasess.player">clasess.player</a>
  &#8226;   <a href="#clasess.playerbar">clasess.playerbar</a>
+ &#8226;   <a href="#clasess.startMenu">clasess.startMenu</a>
+ &#8226;   <a href="#clasess.storm">clasess.storm</a>
 
   </div>
 
@@ -9459,7 +9469,7 @@ imported by:
 
 <div class="node">
   <a name="clasess.camera"></a>
-  <a target="code" href="///D:/projects/aribius/clasess/camera.py" type="text/plain"><tt>clasess.camera</tt></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/camera.py" type="text/plain"><tt>clasess.camera</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#clasess">clasess</a>
@@ -9476,12 +9486,14 @@ imported by:
 
 <div class="node">
   <a name="clasess.fire"></a>
-  <a target="code" href="///D:/projects/aribius/clasess/fire.py" type="text/plain"><tt>clasess.fire</tt></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/fire.py" type="text/plain"><tt>clasess.fire</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#clasess">clasess</a>
+ &#8226;   <a href="#clasess.firebar">clasess.firebar</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pygame">pygame</a>
+ &#8226;   <a href="#random">random</a>
 
   </div>
   <div class="import">
@@ -9493,8 +9505,26 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="clasess.firebar"></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/firebar.py" type="text/plain"><tt>clasess.firebar</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#clasess">clasess</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#pygame">pygame</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#clasess.fire">clasess.fire</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="clasess.level"></a>
-  <a target="code" href="///D:/projects/aribius/clasess/level.py" type="text/plain"><tt>clasess.level</tt></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/level.py" type="text/plain"><tt>clasess.level</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#clasess">clasess</a>
@@ -9515,8 +9545,43 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="clasess.miniMap"></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/miniMap.py" type="text/plain"><tt>clasess.miniMap</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#clasess">clasess</a>
+ &#8226;   <a href="#pygame">pygame</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#main.py">main.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="clasess.pauseMenu"></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/pauseMenu.py" type="text/plain"><tt>clasess.pauseMenu</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#clasess">clasess</a>
+ &#8226;   <a href="#pygame">pygame</a>
+ &#8226;   <a href="#sys">sys</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#main.py">main.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="clasess.player"></a>
-  <a target="code" href="///D:/projects/aribius/clasess/player.py" type="text/plain"><tt>clasess.player</tt></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/player.py" type="text/plain"><tt>clasess.player</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#clasess">clasess</a>
@@ -9534,12 +9599,50 @@ imported by:
 
 <div class="node">
   <a name="clasess.playerbar"></a>
-  <a target="code" href="///D:/projects/aribius/clasess/playerbar.py" type="text/plain"><tt>clasess.playerbar</tt></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/playerbar.py" type="text/plain"><tt>clasess.playerbar</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#clasess">clasess</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pygame">pygame</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#main.py">main.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="clasess.startMenu"></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/startMenu.py" type="text/plain"><tt>clasess.startMenu</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#clasess">clasess</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#pygame">pygame</a>
+ &#8226;   <a href="#sys">sys</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#main.py">main.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="clasess.storm"></a>
+  <a target="code" href="///D:/projects/pyCramProjects/arbius/clasess/storm.py" type="text/plain"><tt>clasess.storm</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#clasess">clasess</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#pygame">pygame</a>
+ &#8226;   <a href="#random">random</a>
 
   </div>
   <div class="import">
@@ -14498,6 +14601,7 @@ imports:
  &#8226;   <a href="#importlib">importlib</a>
  &#8226;   <a href="#importlib._bootstrap">importlib._bootstrap</a>
  &#8226;   <a href="#importlib._bootstrap_external">importlib._bootstrap_external</a>
+ &#8226;   <a href="#importlib.machinery">importlib.machinery</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#warnings">warnings</a>
 
@@ -14640,6 +14744,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#ctypes.util">ctypes.util</a>
+ &#8226;   <a href="#importlib">importlib</a>
  &#8226;   <a href="#importlib.abc">importlib.abc</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#packaging.tags">packaging.tags</a>
@@ -23236,8 +23341,11 @@ imported by:
  &#8226;   <a href="#bdb">bdb</a>
  &#8226;   <a href="#bz2">bz2</a>
  &#8226;   <a href="#clasess.fire">clasess.fire</a>
+ &#8226;   <a href="#clasess.firebar">clasess.firebar</a>
  &#8226;   <a href="#clasess.player">clasess.player</a>
  &#8226;   <a href="#clasess.playerbar">clasess.playerbar</a>
+ &#8226;   <a href="#clasess.startMenu">clasess.startMenu</a>
+ &#8226;   <a href="#clasess.storm">clasess.storm</a>
  &#8226;   <a href="#concurrent.futures.process">concurrent.futures.process</a>
  &#8226;   <a href="#concurrent.futures.thread">concurrent.futures.thread</a>
  &#8226;   <a href="#configparser">configparser</a>
@@ -24575,9 +24683,14 @@ imports:
 imported by:
     <a href="#clasess.camera">clasess.camera</a>
  &#8226;   <a href="#clasess.fire">clasess.fire</a>
+ &#8226;   <a href="#clasess.firebar">clasess.firebar</a>
  &#8226;   <a href="#clasess.level">clasess.level</a>
+ &#8226;   <a href="#clasess.miniMap">clasess.miniMap</a>
+ &#8226;   <a href="#clasess.pauseMenu">clasess.pauseMenu</a>
  &#8226;   <a href="#clasess.player">clasess.player</a>
  &#8226;   <a href="#clasess.playerbar">clasess.playerbar</a>
+ &#8226;   <a href="#clasess.startMenu">clasess.startMenu</a>
+ &#8226;   <a href="#clasess.storm">clasess.storm</a>
  &#8226;   <a href="#main.py">main.py</a>
  &#8226;   <a href="#pygame._freetype">pygame._freetype</a>
  &#8226;   <a href="#pygame.base">pygame.base</a>
@@ -25454,7 +25567,9 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#clasess.level">clasess.level</a>
+    <a href="#clasess.fire">clasess.fire</a>
+ &#8226;   <a href="#clasess.level">clasess.level</a>
+ &#8226;   <a href="#clasess.storm">clasess.storm</a>
  &#8226;   <a href="#email.generator">email.generator</a>
  &#8226;   <a href="#email.utils">email.utils</a>
  &#8226;   <a href="#secrets">secrets</a>
@@ -30586,6 +30701,8 @@ imported by:
  &#8226;   <a href="#base64">base64</a>
  &#8226;   <a href="#bdb">bdb</a>
  &#8226;   <a href="#calendar">calendar</a>
+ &#8226;   <a href="#clasess.pauseMenu">clasess.pauseMenu</a>
+ &#8226;   <a href="#clasess.startMenu">clasess.startMenu</a>
  &#8226;   <a href="#cmd">cmd</a>
  &#8226;   <a href="#code">code</a>
  &#8226;   <a href="#codecs">codecs</a>
@@ -30627,6 +30744,7 @@ imported by:
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#logging">logging</a>
+ &#8226;   <a href="#main.py">main.py</a>
  &#8226;   <a href="#mimetypes">mimetypes</a>
  &#8226;   <a href="#multiprocessing">multiprocessing</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
