@@ -4,6 +4,7 @@
 This repository contains the implementation of the project for the course **Object Technologies** – the game **Arbius – Fire at Night**. In the game, the player controls a hero who must survive on an uninhabited island, fight the cold and other dangers, collect firewood to light a fire and overcome obstacles. The game combines elements of strategic planning, dynamic events and retro-atmospheric graphics.
 
 **Author**: *Ivan Veremchuk*
+
 **Project Theme**: Dark and Light
 
 ---
