@@ -96,7 +96,7 @@ Each stage of the game is accompanied by music that matches the atmosphere:
 - Level Transitions and Victory Screen**: Specially selected music to enhance emotional moments.
 - Death Screen: Dramatic soundtracks that signal failure and the importance of timely action.
 
-Zdrojom hudby pre úrovne, úvodnú obrazovku, prechodové obrazovky, cutscenu a obrazovku Game Over bol zvukový balík:
+The source of the music for the levels, the opening screen, the transition screens, the cutscene and the Game Over screen was the sound package:
 🔗 [instagram music](https://www.instagram.com/).
 ---
 
