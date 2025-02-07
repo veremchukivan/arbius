@@ -28,7 +28,7 @@ The player is faced with the following tasks:
 - **Pygame-CE**: free software language.
 - **PyCharm 2024.1**: IDE released.
 - **Tiled 1.10.2**: graphical level designer for displaying levels.
-- **Itch.io**: converting graphic assets and sounds to UAH.
+- **Itch.io**: graphic assets and sounds.
 
 ---
 ## **2. Concept**.
