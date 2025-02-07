@@ -1,6 +1,6 @@
 from clasess.level import Level
 from clasess.player import Player
-from clasess.playerbar import playerbar
+from clasess.playerbar import PlayerBar
 from clasess.startMenu import StartMenu
 from clasess.pauseMenu import PauseMenu
 from clasess.storm import Storm
@@ -10,14 +10,14 @@ import os
 import sys
 import pygame as pg
 
-def main_game(screen):
+def main_game(game_screen):
     current_level = 0
-    level = Level("map/map.tmx", screen, current_level)
+    level = Level("map/map.tmx", game_screen, current_level)
     player = Player(x=3100, y=2700, speed=4, assets_path="assets")
-    bar = playerbar(assets_path="assets", screen=screen)
+    bar = PlayerBar(assets_path="assets", screen=game_screen)
 
-    pause_menu = PauseMenu(screen)
-    storm = Storm(assets_path="assets", screen=screen)
+    pause_menu = PauseMenu(game_screen)
+    storm = Storm(assets_path="assets", screen=game_screen)
     clock = pg.time.Clock()
 
     # Відтворення фонового музичного супроводу гри (основна музика)
@@ -56,7 +56,7 @@ def main_game(screen):
 
         # Перевірка смерті
         if player.is_frozen:
-            show_death_screen(screen)
+            show_death_screen(game_screen)
             return
 
         for event in pg.event.get():
@@ -71,7 +71,7 @@ def main_game(screen):
                 elif event.key == pg.K_TAB:
                     if current_level < len(levels) - 1:
                         # Завантажуємо заставку переходу рівня
-                        show_level_transition(screen, current_level + 1)
+                        show_level_transition(game_screen, current_level + 1)
                         # Після завершення заставки повертаємо основну музику
                         try:
                             pg.mixer.music.load(game_music_path)
@@ -85,7 +85,7 @@ def main_game(screen):
                         base_freezing_rate = levels[current_level]["freezing_rate"]
                         base_fire_decay_rate = levels[current_level]["fire_decay_rate"]
                     else:
-                        show_victory_screen(screen)
+                        show_victory_screen(game_screen)
                         return
 
             elif event.type == pg.KEYUP:
@@ -101,7 +101,7 @@ def main_game(screen):
                 running = False
                 paused = False
 
-            screen.fill((0, 0, 0))
+            game_screen.fill((0, 0, 0))
             pause_menu.display_menu()
             pg.display.flip()
 
@@ -134,17 +134,17 @@ def main_game(screen):
         bar.update(player.cold_progress)
 
         # Відображення гри
-        screen.fill((0, 0, 0))
+        game_screen.fill((0, 0, 0))
         level.render(player)
-        player.draw(screen, level.camera, bar)
+        player.draw(game_screen, level.camera, bar)
 
         if storm.is_active:
             storm.draw()
 
         if current_level < len(levels):
-            draw_level_timer(screen, level_timer, levels[current_level]["duration"])
+            draw_level_timer(game_screen, level_timer, levels[current_level]["duration"])
 
-        minimap.draw(screen, player)
+        minimap.draw(game_screen, player)
         pg.display.flip()
 
     pg.mixer.music.stop()
@@ -167,7 +167,7 @@ def apply_level_changes(level, player, level_data, current_level):
     level.load_brevno_points()
 
 
-def show_death_screen(screen):
+def show_death_screen(game_screen):
     """Показує екран смерті, коли гравець замерзає, та відтворює відповідну музику."""
     # Формування абсолютного шляху до музичного файлу death.ogg
     base_path = os.path.dirname(os.path.abspath(__file__))
@@ -187,11 +187,11 @@ def show_death_screen(screen):
     instructions = "Press Enter to exit"
 
     # Відображення екрану смерті
-    screen.fill((0, 0, 0))
+    game_screen.fill((0, 0, 0))
     text = font.render(message, True, (255, 0, 0))  # Червоний текст
     sub_text = font.render(instructions, True, (200, 200, 200))
-    screen.blit(text, (screen.get_width() // 2 - text.get_width() // 2, screen.get_height() // 2 - 100))
-    screen.blit(sub_text, (screen.get_width() // 2 - sub_text.get_width() // 2, screen.get_height() // 2))
+    game_screen.blit(text, (game_screen.get_width() // 2 - text.get_width() // 2, game_screen.get_height() // 2 - 100))
+    game_screen.blit(sub_text, (game_screen.get_width() // 2 - sub_text.get_width() // 2, game_screen.get_height() // 2))
     pg.display.flip()
 
     # Очікування, поки користувач не натисне Enter
@@ -206,7 +206,7 @@ def show_death_screen(screen):
 
 
 
-def show_victory_screen(screen):
+def show_victory_screen(game_screen):
     """Показує екран перемоги з анімацією кадрів від 0 до 15."""
     clock = pg.time.Clock()
     running = True
@@ -261,15 +261,15 @@ def show_victory_screen(screen):
 
         # Масштабування поточного кадру під розмір екрану
         current_frame = win_frames[frame_index]
-        current_frame_scaled = pg.transform.scale(current_frame, (screen.get_width(), screen.get_height()))
+        current_frame_scaled = pg.transform.scale(current_frame, (game_screen.get_width(), game_screen.get_height()))
 
         # Відображення кадру та тексту
-        screen.fill((0, 0, 0))
-        screen.blit(current_frame_scaled, (0, 0))
-        text_rect = message.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 100))
-        instructions_rect = instructions.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
-        screen.blit(message, text_rect)
-        screen.blit(instructions, instructions_rect)
+        game_screen.fill((0, 0, 0))
+        game_screen.blit(current_frame_scaled, (0, 0))
+        text_rect = message.get_rect(center=(game_screen.get_width() // 2, game_screen.get_height() // 2 - 100))
+        instructions_rect = instructions.get_rect(center=(game_screen.get_width() // 2, game_screen.get_height() // 2))
+        game_screen.blit(message, text_rect)
+        game_screen.blit(instructions, instructions_rect)
 
         pg.display.update()
         clock.tick(60)
@@ -279,20 +279,20 @@ def show_victory_screen(screen):
 
 
 
-def draw_level_timer(screen, level_timer, level_duration):
+def draw_level_timer(game_screen, level_timer, level_duration):
     """Малює таймер рівня у правому верхньому куті."""
     font = pg.font.Font(None, 36)
     time_left = max(0, int(level_duration - level_timer))  # Час, що залишився
     timer_text = font.render(f"Час: {time_left} сек", True, (255, 255, 255))  # Білий текст
-    text_rect = timer_text.get_rect(topright=(screen.get_width() - 20, 20))  # Правий верхній кут з відступом
-    screen.blit(timer_text, text_rect)
+    text_rect = timer_text.get_rect(topright=(game_screen.get_width() - 20, 20))  # Правий верхній кут з відступом
+    game_screen.blit(timer_text, text_rect)
 
 
-def show_level_transition(screen,level_number):
+def show_level_transition(game_screen, _level_number):
     """Показує заставку перед початком нового рівня."""
     clock = pg.time.Clock()
 
-    black_screen = pg.Surface(screen.get_size())
+    black_screen = pg.Surface(game_screen.get_size())
     black_screen.fill((0, 0, 0))
 
     base_path = os.path.dirname(os.path.abspath(__file__))
@@ -311,14 +311,14 @@ def show_level_transition(screen,level_number):
     message2 = font.render("Arbius sleeps all day long", True, (255, 255, 255))
 
     # Центруємо повідомлення
-    message1_rect = message1.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 40))
-    message2_rect = message2.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 + 40))
+    message1_rect = message1.get_rect(center=(game_screen.get_width() // 2, game_screen.get_height() // 2 - 40))
+    message2_rect = message2.get_rect(center=(game_screen.get_width() // 2, game_screen.get_height() // 2 + 40))
 
     # Малюємо повідомлення на чорному екрані
     black_screen.blit(message1, message1_rect)
     black_screen.blit(message2, message2_rect)
 
-    screen.blit(black_screen, (0, 0))
+    game_screen.blit(black_screen, (0, 0))
     pg.display.flip()
 
     start_ticks = pg.time.get_ticks()
@@ -356,8 +356,8 @@ def show_level_transition(screen,level_number):
 
         # Масштабуємо поточний кадр заставки до розміру екрану
         current_frame = sleepy_frames[frame_index]
-        current_frame_scaled = pg.transform.scale(current_frame, (screen.get_width(), screen.get_height()))
-        screen.blit(current_frame_scaled, (0, 0))
+        current_frame_scaled = pg.transform.scale(current_frame, (game_screen.get_width(), game_screen.get_height()))
+        game_screen.blit(current_frame_scaled, (0, 0))
         pg.display.flip()
 
         # Обробка подій

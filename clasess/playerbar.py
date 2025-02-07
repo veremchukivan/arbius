@@ -1,8 +1,9 @@
 import os
 import pygame as pg
 
-class playerbar(pg.sprite.Sprite):
+class PlayerBar(pg.sprite.Sprite):
     def __init__(self, assets_path, screen):
+        super().__init__()
         self.screen = screen
         self.bars_path = os.path.join(assets_path, "bars", "playerB")
         self.bar_images = self.load_bar_images(self.bars_path)
@@ -12,7 +13,8 @@ class playerbar(pg.sprite.Sprite):
         self.bar_x = 20
         self.bar_y = 20
 
-    def load_bar_images(self, bars_path):
+    @staticmethod
+    def load_bar_images(bars_path):
         """Завантаження зображень додаткового прогрес-бару."""
         bar_images = {}
         for filename in os.listdir(bars_path):
@@ -28,7 +30,6 @@ class playerbar(pg.sprite.Sprite):
         return bar_images
 
     def update(self, progress):
-        """Оновлення поточного зображення прогрес-бару на основі прогресу."""
         # Округлюємо прогрес до найближчого 10%
         rounded_progress = (int(progress / 10) * 10)
         if rounded_progress > 100:

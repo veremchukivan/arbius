@@ -143,6 +143,16 @@ class Fire(pg.sprite.Sprite):
         else:
             self.is_lighting_active = False
 
+    def add_progress(self):
+        """Збільшує прогрес бар на основі відстані до костра."""
+        added_progress = random.randint(5, 20)
+        if self.progress > 0:
+            self.progress += added_progress
+            if self.progress > 100:
+                self.progress = 100
+            self.is_lighting_active = True
+            print(added_progress)
+
     def draw(self, surface, camera):
         """Малювання костра та його прогрес-бару."""
         # Малюємо костер
@@ -157,13 +167,3 @@ class Fire(pg.sprite.Sprite):
 
 
         self.draw_lighting(surface, camera)
-
-    def add_progress(self):
-        """Збільшує прогрес бар на основі відстані до костра."""
-        added_progress = random.randint(5, 20)
-        if self.progress > 0:
-            self.progress += added_progress
-            if self.progress > 100:
-                self.progress = 100
-            self.is_lighting_active = True
-            print(added_progress)

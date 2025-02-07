@@ -2,7 +2,6 @@ import pygame as pg
 import os
 import random
 
-
 class Storm:
     def __init__(self, assets_path, screen):
         self.is_active = False  # Чи активний шторм
@@ -18,7 +17,8 @@ class Storm:
         self.fire_decay_bonus = 0  # Додаткове зменшення прогресу костра
         self.player_freezing_bonus = 0  # Додаткове замерзання гравця
 
-    def load_frames(self, folder_path):
+    @staticmethod
+    def load_frames(folder_path):
         """Завантажує кадри анімації шторму з папки."""
         frames = []
         for filename in sorted(os.listdir(folder_path)):
