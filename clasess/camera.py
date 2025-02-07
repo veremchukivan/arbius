@@ -1,7 +1,7 @@
 import pygame
 
 class Camera:
-    def __init__(self, screen_width, screen_height, map_width, map_height, zoom=1):
+    def __init__(self, screen_width, screen_height, map_width, map_height, zoom):
         self.width = screen_width
         self.height = screen_height
         self.map_width = map_width

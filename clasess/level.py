@@ -8,7 +8,7 @@ from clasess.fire import Fire
 
 
 class GameSprite(pg.sprite.Sprite):
-    def __init__(self, pos, surf, group, inflate_amount=(0, 0)):
+    def __init__(self, pos, surf, group):
         super().__init__(group)
         self.image = surf
         self.visual_rect = self.image.get_rect(topleft=pos)
@@ -68,7 +68,7 @@ class Level:
         self.load_tiles()
         self.load_trees()
         self.load_brevno_points()
-        self.load_fire(self.current_level)  # Передаємо рівень у `load_fire`
+        self.load_fire()  # Передаємо рівень у `load_fire`
 
         # Колізійна група
         self.collision_group = pg.sprite.Group()
@@ -112,7 +112,7 @@ class Level:
 
         # Створюємо спрайти для вибраних точок
         for x, y in random_positions:
-            sprite = GameSprite((x, y), brevno_image_scaled, self.brevno_group, inflate_amount=(0, 0))
+            sprite = GameSprite((x, y), brevno_image_scaled, self.brevno_group)
             sprite.is_brevno = True
 
 
@@ -121,11 +121,11 @@ class Level:
         for layer in self.tmx_data.visible_layers:
             if isinstance(layer, pytmx.TiledTileLayer):  # Якщо це шар плиток
                 if layer.name == "water":
-                    self._load_layer_tiles(layer, self.water_group, inflate_amount=(-10, -10))
+                    self._load_layer_tiles(layer, self.water_group)
                 elif layer.name == "base":
                     self._load_layer_tiles(layer, self.base_group)
                 elif layer.name == 'decore':
-                    self._load_layer_tiles(layer, self.decore_group, inflate_amount=(0, 0))
+                    self._load_layer_tiles(layer, self.decore_group)
                 elif layer.name == 'flower':
                     self._load_layer_tiles(layer, self.flower_group)
                 elif layer.name == 'apple':
@@ -134,13 +134,13 @@ class Level:
                     self._load_layer_tiles(layer, self.swamp_group)
 
 
-    def _load_layer_tiles(self, layer, group, inflate_amount=(0, 0)):
+    def _load_layer_tiles(self, layer, group, ):
         """Завантаження тайлів із заданого шару в певну групу."""
         for x, y, gid in layer:
             tile_image = self.tmx_data.get_tile_image_by_gid(gid)
             if tile_image:
                 pos = (x * self.tmx_data.tilewidth, y * self.tmx_data.tileheight)
-                GameSprite(pos, tile_image, group, inflate_amount=inflate_amount)
+                GameSprite(pos, tile_image, group)
 
 
     def load_trees(self):
@@ -156,11 +156,10 @@ class Level:
                                 x * self.tmx_data.tilewidth,
                                 y * self.tmx_data.tileheight - tile_image.get_height() + 20
                             )
-                            GameSprite(pos, tile_image, self.tree_group,
-                                       inflate_amount=(-5, -5))
+                            GameSprite(pos, tile_image, self.tree_group)
 
 
-    def load_fire(self, current_level):
+    def load_fire(self):
         """Завантаження об'єктів вогню з міткою 'campf'."""
         for layer in self.tmx_data.objectgroups:
             for obj in layer:
@@ -168,8 +167,8 @@ class Level:
                     x = int(obj.x)
                     y = int(obj.y)
 
-                    # Передаємо `current_level` у Fire
-                    Fire(pos=(x, y), assets_path=self.assets_path, group=self.fire_group, current_level=current_level)
+
+                    Fire(pos=(x, y), assets_path=self.assets_path, group=self.fire_group)
 
 
     def is_player_near_fire(self, player):

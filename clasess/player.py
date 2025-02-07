@@ -19,7 +19,7 @@ class Player(pg.sprite.Sprite):
         # Встановлюємо початковий кадр
         self.image = self.animations[self.current_animation][0]
         self.rect = self.image.get_rect(center=(x, y))  # Використовуємо центр
-        self.rect = self.rect.inflate(-20, -20)  # Зменшуємо розмір rect
+        self.rect = self.rect.inflate(-20, -20)
 
         # Лічильник зібраних предметів (бревно)
         self.count_wood = 0
@@ -62,7 +62,8 @@ class Player(pg.sprite.Sprite):
             animations[direction] = frames
         return animations
 
-    def load_additional_bars(self, bars_path):
+    @staticmethod
+    def load_additional_bars(bars_path):
         """Завантаження зображень додаткового прогрес-бару."""
         bar_images = {}
         for filename in os.listdir(bars_path):

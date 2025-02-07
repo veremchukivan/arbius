@@ -36,13 +36,3 @@ class Firebar:
         elif rounded_progress < 0:
             rounded_progress = 0
         self.current_bar_image = self.bar_images.get(rounded_progress, None)
-
-
-    def draw(self, surface, position):
-        """Малювання прогрес-бару."""
-        if self.current_bar_image:
-            bar_width = self.current_bar_image.get_width()
-            bar_height = self.current_bar_image.get_height()
-            bar_x = position.centerx - bar_width // 2
-            bar_y = position.top - bar_height - 10
-            surface.blit(self.current_bar_image, (bar_x, bar_y))
