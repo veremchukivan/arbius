@@ -172,7 +172,7 @@ class Level:
 
 
     def is_player_near_fire(self, player):
-        """Знаходить костер, до якого гравець може взаємодіяти."""
+        """костер, з яким гравець може взаємодіяти."""
         player_center = pg.math.Vector2(player.rect.center)
         nearest_fire = None
         min_distance = float('inf')
@@ -236,7 +236,6 @@ class Level:
 
         if pg.sprite.spritecollide(player, self.swamp_group, False, pg.sprite.collide_rect):
             player.speed = player.base_speed * 0.5  # Зменшуємо швидкість (наприклад, вдвічі)
-            print("[Debug] Гравець на болоті – швидкість зменшена.")
         else:
             player.speed = player.base_speed
 
@@ -302,7 +301,7 @@ class Level:
 
 
     def render(self, player):
-        """Відображаємо об'єкти, які видно у вікні камери, та прогрес-бар костра."""
+        """Відображаємо об'єкти"""
         visible_area = self.camera.get_visible_area()
 
         # Вода

@@ -22,7 +22,7 @@ class Camera:
         self.y = max(0, min(self.y, self.map_height - (self.height / self.zoom)))
 
     def apply(self, rect):
-        """Перетворює координати об'єкта з урахуванням камери без масштабування."""
+        """Перетворює координати об'єкта з урахуванням камери"""
         return pygame.Rect(
             (rect.x - self.x) * self.zoom,
             (rect.y - self.y) * self.zoom,
@@ -31,7 +31,7 @@ class Camera:
         )
 
     def apply_point(self, point):
-        """Перетворює координати точки з урахуванням камери та масштабування."""
+        """Перетворює координати точки з урахуванням камери"""
         return (
             (point[0] - self.x) * self.zoom,
             (point[1] - self.y) * self.zoom,

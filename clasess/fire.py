@@ -144,7 +144,7 @@ class Fire(pg.sprite.Sprite):
             self.is_lighting_active = False
 
     def add_progress(self):
-        """Збільшує прогрес бар на основі відстані до костра."""
+        """Збільшує прогрес бар костра."""
         added_progress = random.randint(5, 20)
         if self.progress > 0:
             self.progress += added_progress

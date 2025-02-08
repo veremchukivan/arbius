@@ -46,7 +46,7 @@ class Player(pg.sprite.Sprite):
         self.additional_bar_images = self.load_additional_bars(os.path.join(assets_path, "bars", "playerB"))
 
     def load_animations(self):
-        """Завантаження анімацій із папки без масштабування."""
+        """Завантаження анімацій із папки"""
         animations = {}
         directions = ["up", "right", "left", "down"]
         for direction in directions:
@@ -64,7 +64,7 @@ class Player(pg.sprite.Sprite):
 
     @staticmethod
     def load_additional_bars(bars_path):
-        """Завантаження зображень додаткового прогрес-бару."""
+        """Завантаження зображень прогрес-бару."""
         bar_images = {}
         for filename in os.listdir(bars_path):
             if filename.endswith('.png'):

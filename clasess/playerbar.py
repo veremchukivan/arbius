@@ -15,7 +15,7 @@ class PlayerBar(pg.sprite.Sprite):
 
     @staticmethod
     def load_bar_images(bars_path):
-        """Завантаження зображень додаткового прогрес-бару."""
+        """Завантаження зображень  прогрес-бару."""
         bar_images = {}
         for filename in os.listdir(bars_path):
             if filename.endswith('.png'):
@@ -41,6 +41,6 @@ class PlayerBar(pg.sprite.Sprite):
         self.current_bar_image = self.bar_images.get(rounded_progress, self.bar_images.get(0, None))
 
     def draw(self):
-        """Малювання додаткового прогрес-бару на екрані."""
+        """Малювання  прогрес-бару на екрані."""
         if self.current_bar_image:
             self.screen.blit(self.current_bar_image, (self.bar_x, self.bar_y))
