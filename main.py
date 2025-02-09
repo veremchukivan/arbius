@@ -41,6 +41,9 @@ def main_game(game_screen):
     ]
 
     level_timer = 0  # Лічильник часу для рівня
+
+
+
     paused = False
     running = True
 
@@ -53,6 +56,34 @@ def main_game(game_screen):
         delta_time = clock.tick(60) / 1000.0
         level_timer += delta_time
         storm_timer += delta_time
+
+        # Перевіряємо, чи рівень завершився
+        if level_timer >= levels[current_level]["duration"]:
+            if current_level < len(levels) - 1:
+                print(f"Час рівня закінчився! Переходимо на рівень {current_level + 1}")
+
+                # Завантажуємо заставку переходу рівня
+                show_level_transition(game_screen, current_level + 1)
+
+                # Відновлюємо музику після заставки
+                try:
+                    pg.mixer.music.load(game_music_path)
+                    pg.mixer.music.set_volume(0.1)
+                    pg.mixer.music.play(-1)
+                except pg.error as e:
+                    print("Помилка відтворення музики гри:", e)
+
+                # Оновлюємо рівень
+                current_level += 1
+                level_timer = 0  # Скидаємо таймер рівня
+                apply_level_changes(level, player, levels[current_level], current_level)
+                base_freezing_rate = levels[current_level]["freezing_rate"]
+                base_fire_decay_rate = levels[current_level]["fire_decay_rate"]
+
+            else:
+                print("Гра завершена! Відображаємо екран перемоги.")
+                show_victory_screen(game_screen)
+                return
 
         # Перевірка смерті
         if player.is_frozen:
