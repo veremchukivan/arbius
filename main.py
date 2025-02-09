@@ -181,21 +181,32 @@ def main_game(game_screen):
     pg.mixer.music.stop()
 
 
-
-
 def apply_level_changes(level, player, level_data, current_level):
+    # Оновлюємо поточний рівень в об'єкті level
+    level.current_level = current_level
+
     for fire in level.fire_group:
         fire.progress = 100  # Скидаємо прогрес костра
-        fire.decrease_point = level_data["fire_decay_rate"]  # Встановлюємо новий темп згасання
-        fire.lighting_radius = max(70, fire.lighting_radius - (current_level * 50))  # Зменшуємо радіус освітлення
-        fire.lighting_surface = fire.create_lighting_surface()  # Оновлюємо поверхню освітлення
-        fire.progress_bar.update(fire.progress)  # Оновлюємо прогрес-бар костра
+        fire.decrease_point = level_data["fire_decay_rate"]
+        fire.lighting_radius = max(70, fire.lighting_radius - (current_level * 50))
+        fire.lighting_surface = fire.create_lighting_surface()
+        fire.progress_bar.update(fire.progress)
 
-    player.cold_progress = 0  # Скидаємо рівень холоду
-    player.cold_increase_amount = level_data["freezing_rate"]  # Встановлюємо новий темп замерзання
+    # Скидаємо холід гравця
+    player.cold_progress = 0
+    player.cold_increase_amount = level_data["freezing_rate"]
 
+    # Якщо гравець несе лог, видаляємо його
+    if player.carried_log:
+        player.carried_log.kill()  # Видаляємо лог з усіх груп
+        player.carried_log = None
+        player.count_wood = 0  # Скидаємо лічильник бревен
+
+    # Очищаємо групу бревен і завантажуємо їх заново для нового рівня
     level.brevno_group.empty()
     level.load_brevno_points()
+
+
 
 
 def show_death_screen(game_screen):

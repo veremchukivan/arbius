@@ -101,11 +101,9 @@ class Level:
                     if getattr(obj, "name", None) == "brevno":
                         brevno_positions.append((int(obj.x), int(obj.y)))
 
-        # Розраховуємо кількість бревен для поточного рівня
         # Наприклад, з кожним рівнем зменшуємо кількість бревен на 5 (це значення можна налаштувати)
-        reduction = 5
         total_logs = len(brevno_positions)
-        logs_to_use = max(1, total_logs - self.current_level * reduction)  # Не менше 1-го
+        logs_to_use = total_logs - self.current_level * 15
 
         # Випадковий вибір точок із отриманої кількості
         random_positions = random.sample(brevno_positions, logs_to_use)
@@ -114,7 +112,7 @@ class Level:
         for x, y in random_positions:
             sprite = GameSprite((x, y), brevno_image_scaled, self.brevno_group)
             sprite.is_brevno = True
-
+        print(f"Total logs: {total_logs}, logs to use: {logs_to_use}")
 
     def load_tiles(self):
         """Завантаження тайлів із шарів карти у відповідному порядку."""
@@ -239,28 +237,25 @@ class Level:
         else:
             player.speed = player.base_speed
 
-
     def check_brevno_pickup(self, player):
-        """Перевіряє зіткнення гравця з бревнами."""
 
-        if player.carried_log is not None:
-            self.collision_group.add(*self.brevno_group)
-        else:
+        # Якщо гравець несе жодного логу, логи повинні бути активними для підібрання
+        if player.carried_log is None:
             self.collision_group.remove(*self.brevno_group)
+        else:
+            self.collision_group.add(*self.brevno_group)
+
         for brevno in list(self.brevno_group):
             if player.rect.colliderect(brevno.rect):
                 if player.carried_log is None:
-                    # Видаляємо бревно зі спрайт-групи
+                    # Видаляємо бревно з групи, щоб воно не залишалося доступним
                     self.brevno_group.remove(brevno)
-                    self.collision_group.remove(brevno)
+                    # Гравець підбирає бревно
                     player.carried_log = brevno
-                    carried_offset = (30, -10)  # Налаштуйте зміщення за потребою
+                    carried_offset = (30, -10)  # Налаштуйте зміщення, якщо потрібно
                     player.carried_log.rect.centerx = player.rect.centerx + carried_offset[0]
                     player.carried_log.rect.centery = player.rect.centery + carried_offset[1]
                     player.count_wood += 1
-                else:
-                    self.collision_group.add(*self.brevno_group)
-
 
     def handle_collisions(self, player):
         # Рух по осі X
