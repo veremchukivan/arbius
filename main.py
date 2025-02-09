@@ -76,6 +76,7 @@ def main_game(game_screen):
                 # Оновлюємо рівень
                 current_level += 1
                 level_timer = 0  # Скидаємо таймер рівня
+                player = Player(x=3100, y=2700, speed=4, assets_path="assets")
                 apply_level_changes(level, player, levels[current_level], current_level)
                 base_freezing_rate = levels[current_level]["freezing_rate"]
                 base_fire_decay_rate = levels[current_level]["fire_decay_rate"]
@@ -112,6 +113,7 @@ def main_game(game_screen):
                             print("Помилка відтворення музики гри:", e)
                         current_level += 1
                         level_timer = 0
+                        player = Player(x=3100, y=2700, speed=4, assets_path="assets")
                         apply_level_changes(level, player, levels[current_level], current_level)
                         base_freezing_rate = levels[current_level]["freezing_rate"]
                         base_fire_decay_rate = levels[current_level]["fire_decay_rate"]

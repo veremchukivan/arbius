@@ -238,21 +238,21 @@ class Level:
             player.speed = player.base_speed
 
     def check_brevno_pickup(self, player):
-
-        # Якщо гравець несе жодного логу, логи повинні бути активними для підібрання
+        # Змінюємо належність бревен до collision_group залежно від того, чи несе герой лог
         if player.carried_log is None:
             self.collision_group.remove(*self.brevno_group)
         else:
             self.collision_group.add(*self.brevno_group)
 
+        # Перевірка на підбір логів
         for brevno in list(self.brevno_group):
             if player.rect.colliderect(brevno.rect):
                 if player.carried_log is None:
-                    # Видаляємо бревно з групи, щоб воно не залишалося доступним
+                    # Видаляємо бревно з групи під час підбору
                     self.brevno_group.remove(brevno)
-                    # Гравець підбирає бревно
+                    # Герой підбирає бревно
                     player.carried_log = brevno
-                    carried_offset = (30, -10)  # Налаштуйте зміщення, якщо потрібно
+                    carried_offset = (30, -10)  # налаштовуємо зміщення, якщо потрібно
                     player.carried_log.rect.centerx = player.rect.centerx + carried_offset[0]
                     player.carried_log.rect.centery = player.rect.centery + carried_offset[1]
                     player.count_wood += 1
