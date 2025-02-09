@@ -369,7 +369,7 @@ def show_level_transition(game_screen, _level_number):
 
 
 pg.init()
-screen = pg.display.set_mode((1800, 1080))
+screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
 pg.display.set_caption("Arbius-fire at night")
 
 # Запускаємо стартове меню
