@@ -1,4 +1,4 @@
-# **ARBIUS - Fire by Night***.
+# **ARBIUS - Fire by Night**.
 *Game development document - EN*.
 
 This repository contains the implementation of the project from the course **Object Technologies** - the game **Arbius - Fire at Night**. In the game, the player controls a hero who must survive on a desert island, fight the cold and other dangers, collect firewood to make a fire and overcome obstacles. The game combines elements of strategic planning, dynamic events and retro atmospheric graphics.
@@ -24,7 +24,7 @@ The player is faced with the following tasks:
 - **Dynamic events**: Storms and other random events change the conditions of the game, affecting the speed of freezing of the hero and the reduction of the fire.
 - **Swamp mechanics**: When the hero enters the swamp, his speed is significantly reduced, making it difficult to move and requiring careful route planning.
 
-## **1.3 Voice Software**.
+## **1.3 Development Software**.
 - **Pygame-CE**: free software language.
 - **PyCharm 2024.1**: IDE released.
 - **Tiled 1.10.2**: graphical level designer for displaying levels.
