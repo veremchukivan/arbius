@@ -1,36 +1,37 @@
-# **ARBIUS – Fire at Night**
-*Game Design Document - EN*
+# **ARBIUS - Fire by Night**.
+*Game development document - EN*.
 
-This repository contains the implementation of the project for the course **Object Technologies** – the game **Arbius – Fire at Night**. In the game, the player controls a hero who must survive on an uninhabited island, fight the cold and other dangers, collect firewood to light a fire and overcome obstacles. The game combines elements of strategic planning, dynamic events and retro-atmospheric graphics.
+This repository contains the implementation of the project from the course **Object Technologies** - the game **Arbius - Fire at Night**. In the game, the player controls a hero who must survive on a desert island, fight the cold and other dangers, collect firewood to make a fire and overcome obstacles. The game combines elements of strategic planning, dynamic events and retro atmospheric graphics.
 
 **Author**: *Ivan Veremchuk*
-**Project Theme**: Dark and Light
+
+**Project theme**: *Darkness and Light.*
 
 ---
 
-## **1. Introduction**
+## **1. Introduction.**
 
-### **1.1 Idea and Inspiration**
+**1.1 Idea and inspiration**.
 
-**Arbius – Fire at Night** was created as a final project for the subject Object Technologies. The main idea is to survive in a night, gloomy world, where the cold and harsh environment force the hero to constantly move forward, collecting limited resources to maintain the fire. Inspired by classic works of darkness and light, as well as indie games where atmosphere and precise interaction with the environment are key aspects.
+**The Arbius - Fire at Night project was created as a final project in the subject of Object Technologies. The main idea is to survive in a nighttime, gloomy world where the cold and harsh environment force the hero to constantly move forward, gathering limited resources to keep the fire burning. Inspired by classic works of darkness and light, as well as indie games where atmosphere and precise interaction with the environment are key aspects.
 
-### **1.2 Game Overview**
+### **1.2 Game Overview**.
 
-The player has the following tasks:
-- **Survive the Night**: Survive a long, cold night.
-- **Gather Resources**: Collect logs to light a campfire. The amount of available firewood gradually decreases with each subsequent level, creating an additional challenge.
-- **Fight the Cold**: The cold increases throughout the level, so the hero must light a campfire in time or seek out areas of light to prevent freezing.
-- **Dynamic Events**: Storms and other random events change the game conditions, affecting the speed at which the hero freezes and the reduction of the campfire.
-- **Swamp Mechanic**: When the hero enters a swamp, his speed decreases significantly, making movement difficult and requiring careful route planning.
+The player is faced with the following tasks:
+- **Survive the night**: Survive a long, cold night.
+- **Collect resources**: Collect logs to make a fire. The amount of firewood available gradually decreases with each successive level, creating an additional challenge.
+- **Fight the Cold**: The cold intensifies throughout the level, so the hero must light the fire in time or look for bright places to stay warm.
+- **Dynamic events**: Storms and other random events change the conditions of the game, affecting the speed of freezing of the hero and the reduction of the fire.
+- **Swamp mechanics**: When the hero enters the swamp, his speed is significantly reduced, making it difficult to move and requiring careful route planning.
 
-### **1.3 Vývojový softvér**
-- **Pygame-CE**: zvolený programovací jazyk.
-- **PyCharm 2024.1**: vybrané IDE.
-- **Tiled 1.10.2**: grafický nástroj na vytváranie levelov.
-- **Itch.io**: zdroj grafických assetov a zvukov do hry.
+## **1.3 Development Software**.
+- **Pygame-CE**: free software language.
+- **PyCharm 2024.1**: IDE released.
+- **Tiled 1.10.2**: graphical level designer for displaying levels.
+- **Itch.io**: graphic assets and sounds.
 
 ---
-## **2. Concept**
+## **2. Concept**.
 
 ### **2.1 Gameplay Overview**
 
@@ -46,15 +47,6 @@ The game explores the struggle between light and darkness:
 - **Darkness** represents the cold, danger and harsh, hostile environment.
 - The player must use light as a tool for survival, confronting the darkness.
 
-### **2.3 Core Mechanics**
-
-- **Movement & Interaction**: The hero moves around the map and interacts with objects (picks up logs, lights fires).
-- **Resource System**: Logs are used to maintain the fire; their number gradually decreases with each level.
-- **Collision System**: Masks and polygonal contours are used to accurately define interactions between objects.
-- **Dynamic Events**: For example, a storm affects the rate at which the fire decreases and the hero freezes.
-- **Level Progression**: When moving between levels, the game parameters change, including the number of available resources and storm bonuses.
-- **Swamp Mechanic**: In the swamp area, the hero's movement speed decreases, which makes movement more difficult and requires strategic planning.
-
 ---
 
 
@@ -64,14 +56,14 @@ The game explores the struggle between light and darkness:
 The game aims to be visually appealing with carefully selected assets that emphasize the contrast between light and darkness. Using assets from itch.io, assets were selected for the protagonist and environmental elements that convey the atmosphere of gloom, cold night and the struggle for survival. The protagonist symbolizes warmth and hope, while the dark, harsh environment reflects the dangers and trials he faces.
 
 <p align="center">
-  <img src="./assets/player/down/0.png" alt="Концепт героя" width="300">
-  <br>
-  <em>Hero Concept Preview</em>
+<img src="./assets/player/down/0.png" alt="Концепт героя" width="300">
+<br>
+<em>Hero Concept Preview</em>
 </p>
 
 ### **3.2 Design.**
 
-Ako hlavný asset pre prostredie bol použitý platený balík:  
+A paid package was used as the main asset for the environment:
 🔗 [sprout-lands-asset-pack](https://cupnooble.itch.io/sprout-lands-asset-pack).
 
 The game uses assets that match the theme of medieval fantasy and survival. Resources from itch.io, in particular pixel art sets, help create a unique environment on an uninhabited island. The main focus is on the following elements:
@@ -80,9 +72,9 @@ The game uses assets that match the theme of medieval fantasy and survival. Reso
 - **Decorative elements**: Carefully selected objects that not only decorate the level, but also perform a functional role (for example, create obstacles or contribute to the correct operation of the collision system).
 
 <p align="center">
-  <img src="./map/map.png" alt="Дизайн рівня" width="800">
-  <br>
-  <em>Level design concept</em>
+<img src="./map/map.png" alt="Дизайн рівня" width="800">
+<br>
+<em>Level design concept</em>
 </p>
 
 
@@ -98,28 +90,20 @@ To accurately determine collisions, a mask system is used that generates polygon
 
 ### **4.1 Music**
 
-Each stage of the game has music that matches the atmosphere:
-- **Start Menu**: Melodies that immerse you in the game world.
-- **Main Game**: Atmospheric compositions that emphasize the tension and gloom of the night world.
-- **Level Transitions & Victory Screen**: Specially selected music to enhance emotional moments.
-- **Death Screen**: Dramatic soundtracks that signal failure and the importance of timely action.
+Each stage of the game is accompanied by music that matches the atmosphere:
+- **Start Menu**: Melodies that immerse you in the world of the game.
+- Main Game: Atmospheric compositions that emphasize the tension and gloom of the night world.
+- Level Transitions and Victory Screen**: Specially selected music to enhance emotional moments.
+- Death Screen: Dramatic soundtracks that signal failure and the importance of timely action.
 
-Zdrojom hudby pre úrovne, úvodnú obrazovku, prechodové obrazovky, cutscénu a obrazovku Game Over bol zvukový balík:  
+The source of the music for the levels, the opening screen, the transition screens, the cutscene and the Game Over screen was the sound package:
 🔗 [instagram music](https://www.instagram.com/).
 ---
 
 ## **5. Gameplay and Interface**
 
-### **5.1 Gameplay**
 
-The player must:
-- **Survive the Night**: Survive a long, cold night.
-- **Gather Resources**: Gather logs to build a campfire; the number of logs available decreases with each level, creating an additional challenge.
-- **Fight the Cold**: The cold increases throughout the level, so the hero must maintain a campfire or seek out areas of light to avoid freezing.
-- **Dynamic Events**: Storms and other random events change the game conditions, affecting the hero's freezing rate and the effectiveness of the campfire.
-- **Swamp Mechanic**: When entering a swamp, the hero's movement speed is significantly reduced, making movement difficult and requiring careful route planning.
-
-### **5.2 User Interface**
+### **5.1 User Interface**
 
 The game interface includes:
 - **Animated Main Menu**: A start menu with interactive animation and the ability to start the game by pressing the Enter key.
@@ -128,7 +112,7 @@ The game interface includes:
 - **Corruption/Cold Bar** – shows the level of cold that is bringing the hero closer to freezing.
 - **Minimap**: Shows the hero's position on the map, the location of key objects (e.g. firewood) and helps navigate the large game world.
 
-### **5.3 Controls**
+### **5.2 Controls**
 
 #### **Keyboard:**
 - **A/D** or **Left/Right Arrows** – horizontal movement.
